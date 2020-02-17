@@ -5,30 +5,16 @@ import {withRouter} from 'react-router-dom';
 import cx from 'classnames';
 import Loader from 'react-loaders';
 import AppMain from '../Layout';
-import { cargarUsuario } from '../Actions/Autenticacion';
+import { cargarUsuario, obtenerUsuario, volerLogin } from '../Actions/Autenticacion';
 import Autenticacion from '../Autenticacion';
 
 class App extends Component {
 
-  constructor(props){
-    super(props);
-
-    this.state = {
-      cargandoSesion: true
-    }
-  }
-
-  componentDidMount = () => {
+  componentDidMount = async () => {
     if(!Autenticacion.obtenerToken()){
-      this.props.cargarUsuarioDispatch(null);
-      this.setState({
-        cargandoSesion: false
-      });
+      this.props.volverLoginDispatch(null, false);
     }else if(!this.props.usuario){
-      this.props.cargarUsuarioDispatch({nombre: "Ayneer Luis"});
-      this.setState({
-        cargandoSesion: false
-      });
+      this.props.recuperarUsuarioDispatch();
     }
   }
 
@@ -45,7 +31,7 @@ class App extends Component {
         usuario,
       } = this.props;
 
-    let { cargandoSesion } = this.state;
+    let { cargandoSesion } = this.props;
 
     return (
       <ResizeDetector
@@ -92,11 +78,15 @@ const mapStateToProp = state => ({
   enableFixedSidebar: state.ThemeOptions.enableFixedSidebar,
   enableClosedSidebar: state.ThemeOptions.enableClosedSidebar,
   enablePageTabsAlt: state.ThemeOptions.enablePageTabsAlt,
+
   usuario: state.Autenticacion.usuario,
+  cargandoSesion: state.Autenticacion.cargandoSesionRecuperada,
 });
 
 const mapDispatchToProps = dispatch => ({
   cargarUsuarioDispatch: usuario => dispatch(cargarUsuario(usuario)),
+  recuperarUsuarioDispatch: () => dispatch(obtenerUsuario()),
+  volverLoginDispatch: (usuario, estado) => dispatch(volerLogin(usuario, estado)),
 })
 
 export default withRouter(connect(mapStateToProp, mapDispatchToProps)(App));

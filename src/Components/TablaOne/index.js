@@ -1,11 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
     NavLink,
     Table,
     CardHeader,
-    CardFooter,
-    ButtonGroup,
-    Popover,
     PopoverBody,
     Row,
     Col,
@@ -13,11 +10,17 @@ import {
     Nav,
     NavItem,
     Card,
+    UncontrolledPopover,
+    CardFooter
 } from 'reactstrap';
-import classnames from 'classnames';
+import BlockUi from 'react-block-ui';
+import { Loader } from 'react-loaders';
+import SweetAlert from 'sweetalert-react';
+
+import ModalUsuario from '../Dashboards/Usuarios/Modal';
 
 import avatar2 from '../../assets/utils/images/avatars/2.jpg';
-import bg1 from '../../assets/utils/images/dropdown-header/abstract1.jpg';
+import Perfil from './perfil';
 
 class TablaComponent extends Component {
 
@@ -25,131 +28,192 @@ class TablaComponent extends Component {
         super(props);
 
         this.state = {
-            popoverOpen1: false,
+            mostrarAlerta: true,
+            modalEstado: false,
+            asegurarAccion: false,
+            identificacion_usuario: null
         }
+
+        this.toggleModal = this.toggleModal.bind(this);
+    }
+
+    ocultarAlerta = () => {
+        this.setState({ mostrarAlerta: false });
+    }
+
+    toggleModal() {
+        console.log("d")
+        this.setState({
+            modalEstado: !this.state.modalEstado
+        });
+    }
+
+    eliminarDato = () => {
+        this.props.eliminarDato(this.state.identificacion_usuario);
+        // this.setState({ asegurarAccion: false });
+    }
+
+    cancelarEliminacion = () => {
+        this.setState({ asegurarAccion: false, identificacion_usuario: null });
+    }
+
+    optMenu = (id) => {
+        return (
+            <Fragment>
+                <Button size="sm" color="primary" id={`PopoverCustomT-${id}`}>
+                    <span className="pe-7s-more" ></span>
+                </Button>
+                <UncontrolledPopover
+                    trigger="legacy"
+                    placement="bottom"
+                    className="popover-custom rm-pointers"
+                    target={`PopoverCustomT-${id}`}>
+                    <PopoverBody>
+                        <Nav vertical>
+                            <NavItem className="nav-item-header">
+                                Acciones
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="#">Editar</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="#">Ver perfil</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="#" onClick={() => this.setState({ asegurarAccion: true, identificacion_usuario: id })}>Eliminar</NavLink>
+                            </NavItem>
+                            {/* <NavItem>
+                                <NavLink href="#">Recuperar contraseña</NavLink>
+                            </NavItem> */}
+                        </Nav>
+                    </PopoverBody>
+                </UncontrolledPopover >
+            </Fragment>
+        )
+    }
+
+    alterarAlertaEliminarError = (mensaje, estado) => {
+        this.props.alterarAlertaEliminarError(mensaje, estado);
+        this.setState({ asegurarAccion: false,identificacion_usuario: null });
+    }
+
+    alterarAlertaEliminarSuccess = (mensaje, estado) => {
+        this.props.alterarAlertaEliminarSuccess(mensaje, estado);
+        this.setState({ asegurarAccion: false,identificacion_usuario: null });
     }
 
     render() {
+
+        let { cargandoDatos, datos, error, mensajeError, eliminandoDato, errorEliminarDato, eliminarMensajeError, datoEliminado, mensajeExitoEliminar } = this.props;
+        let { mostrarAlerta, modalEstado, asegurarAccion } = this.state;
+
         return (
             <Row>
                 <Col md="12">
-                    <Card className="main-card mb-3">
+                    <Card className="main-card mb-6">
+
+                        <ModalUsuario modalEstado={modalEstado} toggle={this.toggleModal} />
 
                         <CardHeader>
-                            Active Users
-                                    <div className="btn-actions-pane-right">
-                                <ButtonGroup size="sm">
-                                    <Button caret="true" color="focus"
-                                        className={"active"}>Last Week</Button>
-                                    <Button caret="true" color="focus">All Month</Button>
-                                </ButtonGroup>
-                            </div>
+                            Usuarios activos
                         </CardHeader>
 
-                        <Table responsive hover striped borderless className="align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th className="text-center">#</th>
-                                    <th>Name</th>
-                                    <th className="text-center">City</th>
-                                    <th className="text-center">Status</th>
-                                    <th className="text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td className="text-center text-muted">#345</td>
+                        <BlockUi tag="div" blocking={cargandoDatos} className="block-overlay-dark"
+                            loader={<Loader color="#ffffff" active type={"ball-pulse"} />} >
 
-                                    <td>
-                                        <div className="widget-content p-0">
-                                            <div className="widget-content-wrapper">
-                                                <div className="widget-content-left mr-3">
-                                                    <div className="widget-content-left">
-                                                        <img width={40} className="rounded-circle"
-                                                            src={avatar2}
-                                                            alt="" />
-                                                    </div>
-                                                </div>
-                                                <div className="widget-content-left flex2">
-                                                    <div className="widget-heading">
-                                                        John Doe
-                                                        </div>
-                                                    <div className="widget-subheading opacity-7">
-                                                        Web Developer
-                                                        </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
+                            {error ?
 
-                                    <td className="text-center">
-                                        Madrid
-                                            </td>
+                                <div>
+                                    {mensajeError}
+                                    <SweetAlert
+                                        title="Good job!"
+                                        confirmButtonColor=""
+                                        show={mostrarAlerta}
+                                        text="You clicked the button!"
+                                        type="warning"
+                                        onConfirm={this.ocultarAlerta} />
+                                </div>
+                                :
+                                <div style={{
+                                    maxHeight: '500px',
+                                    overflowY: 'auto'
+                                }}>
+                                    <Table responsive hover striped borderless className="align-middle mb-2">
+                                        <thead >
+                                            <tr>
+                                                <th className="text-center">#</th>
+                                                <th>Nombre</th>
+                                                <th className="text-center">Identificación</th>
+                                                <th className="text-center">Correo</th>
+                                                <th className="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {datos.length > 0 && datos.map((usuario, index) =>
+                                                <tr key={usuario.identificacion}>
+                                                    <td className="text-center text-muted">{`#${index + 1}`}</td>
 
-                                    <td className="text-center">
-                                        <div className="badge badge-warning">Pending</div>
-                                    </td>
+                                                    <td>
+                                                        <Perfil nombre={usuario.nombres} descripcion={usuario.tipo_perfil} avatar={avatar2} />
+                                                    </td>
 
-                                    <td className="text-center">
-                                        <Button size="sm" color="primary" id={'PopoverCustomT-1'}
-                                            onClick={this.togglePop1}>
-                                            Details
-                                                </Button>
-                                        <Popover className="popover-custom rm-pointers" placement="auto"
-                                            isOpen={this.state.popoverOpen1}
-                                            target={'PopoverCustomT-1'} toggle={this.togglePop1}>
-                                            <PopoverBody>
-                                                <div className="dropdown-menu-header">
-                                                    <div className={classnames(
-                                                        "dropdown-menu-header-inner bg-focus")}>
-                                                        <div className="menu-header-image"
-                                                            style={{
-                                                                backgroundImage: 'url(' + bg1 + ')'
-                                                            }}
-                                                        />
-                                                        <div className="menu-header-content">
-                                                            <h5 className="menu-header-title">Settings</h5>
-                                                            <h6 className="menu-header-subtitle">Manage all of your
-                                                                    options</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <Nav vertical>
-                                                    <NavItem className="nav-item-header">
-                                                        Activity
-                                                        </NavItem>
-                                                    <NavItem>
-                                                        <NavLink href="#">
-                                                            Chat
-                                                                <div
-                                                                className="ml-auto badge badge-pill badge-info">8</div>
-                                                        </NavLink>
-                                                    </NavItem>
-                                                    <NavItem>
-                                                        <NavLink href="#">Recover
-                                                                Password</NavLink>
-                                                    </NavItem>
-                                                    <NavItem className="nav-item-divider" />
-                                                    <NavItem className="nav-item-btn text-center">
-                                                        <Button size="sm" className="btn-wide btn-shadow"
-                                                            color="danger">
-                                                            Cancel
-                                                            </Button>
-                                                    </NavItem>
-                                                </Nav>
-                                            </PopoverBody>
-                                        </Popover>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </Table>
+                                                    <td className="text-center">
+                                                        {usuario.identificacion}
+                                                    </td>
+
+                                                    <td className="text-center">
+                                                        <div className="badge badge-warning">{usuario.correo}</div>
+                                                    </td>
+
+                                                    <td className="text-center">
+                                                        {this.optMenu(usuario.identificacion)}
+                                                    </td>
+                                                </tr>
+
+                                            )}
+
+                                        </tbody>
+                                    </Table>
+
+                                    <SweetAlert
+                                        title={ eliminandoDato ? "Eliminando usuario" : "¿Estas seguro?"}
+                                        confirmButtonColor=""
+                                        show={asegurarAccion}
+                                        text={ eliminandoDato ? "Por favor espere mientra se completa el proceso." : "No podrás revertir esta acción."}
+                                        showCancelButton = { eliminandoDato ? false : true }
+                                        showConfirmButton = { eliminandoDato ? false : true }
+                                        type={"input"}
+                                        onConfirm={() => this.eliminarDato()}
+                                        onCancel={() => this.cancelarEliminacion()} />
+
+                                    {/* <SweetAlert
+                                        title="Eliminando usuario"
+                                        confirmButtonColor=""
+                                        show={eliminandoDato}
+                                        text="Por favor espere mientra se completa el proceso."
+                                        showCancelButton={false}
+                                        showConfirmButton={false} /> */}
+
+                                    <SweetAlert
+                                        title="Oops, ah ocurrido un error!"
+                                        confirmButtonColor=""
+                                        show={errorEliminarDato}
+                                        text={eliminarMensajeError}
+                                        type="error"
+                                        onConfirm={() => this.alterarAlertaEliminarError("", false)} />
+
+                                    <SweetAlert
+                                        title="Proceso exitoso!"
+                                        confirmButtonColor=""
+                                        show={datoEliminado}
+                                        text={mensajeExitoEliminar}
+                                        type="success"
+                                        onConfirm={() => this.alterarAlertaEliminarSuccess("", false)} />
+
+                                </div>
+                            }
+                        </ BlockUi>
                         <CardFooter className="d-block text-center">
-                            <Button className="mr-2 btn-icon btn-icon-only" outline color="danger">
-                                <i className="pe-7s-trash btn-icon-wrapper"> </i>
-                            </Button>
-                            <Button className="btn-wide" color="success">
-                                Save
-                                    </Button>
                         </CardFooter>
                     </Card>
                 </Col>

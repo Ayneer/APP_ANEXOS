@@ -8,11 +8,7 @@ export const MainNav = [
                 to: '/#/dashboards/registrar',
             },
             {
-                label: 'Mis usuarios',
-                to: '#/dashboards/usuarios',
-            },
-            {
-                label: 'Cerrar sesion',
+                label: 'Listar',
                 to: '/#/dashboards/usuarios',
             }
 
@@ -20,8 +16,13 @@ export const MainNav = [
     },
     {
         icon: 'pe-7s-id',
-        label: 'Profile Boxes',
-        to: '/',
+        label: 'Perfil',
+        to: '/#/dashboards/perfil',
+    },
+    {
+        icon: 'pe-7s-left-arrow',
+        label: 'Cerrar sesión',
+        to: '/#/dashboards/salir',
     },
 ];
 

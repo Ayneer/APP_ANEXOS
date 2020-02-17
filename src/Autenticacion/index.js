@@ -6,6 +6,7 @@ Autenticacion.guardarToken = (Token) => {
 
 Autenticacion.eliminarToken = () => {
     localStorage.removeItem('session');
+    localStorage.clear();
 }
 
 Autenticacion.obtenerToken = () => {
