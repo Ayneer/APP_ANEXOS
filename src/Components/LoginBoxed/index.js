@@ -24,10 +24,10 @@ class LoginBoxed extends Component {
         //limpiar mensajes de error
         lanarErrorDispatch(null, false);
 
-        if (!correo || !contraseña) {
+        if (!correo.trim() || !contraseña.trim()) {
             lanarErrorDispatch("Error. Todos los campos son obligatotios", true);
         } else {
-            iniciarSesinDispatch(correo, contraseña);
+            iniciarSesinDispatch(correo.trim(), contraseña.trim());
         }
 
     }

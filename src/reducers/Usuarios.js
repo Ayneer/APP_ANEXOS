@@ -1,4 +1,4 @@
-import { CARGAR_USUARIOS, ERROR_CARGAR_USUARIOS, USUARIO_ELIMINADO, ERROR_ELIMINAR_USUARIO, ELIMINANDO_USUARIO, ELIMINANDO_USUARIO_ALERTA, ELIMINAR_USUARIO, AGREGAR_USUARIO } from '../config/variables';
+import { CARGAR_USUARIOS, ERROR_CARGAR_USUARIOS, USUARIO_ELIMINADO, ERROR_ELIMINAR_USUARIO, ELIMINANDO_USUARIO, ELIMINANDO_USUARIO_ALERTA, ELIMINAR_USUARIO, AGREGAR_USUARIO, ACTUALIZAR_USUARIO } from '../config/variables';
 
 const initState = {
     usuarios: [],
@@ -73,6 +73,22 @@ const usuario = (state = initState, action) => {
             return {
                 ...state,
                 ...usuarios
+            }
+        }
+
+        case ACTUALIZAR_USUARIO: {
+            let usuario = action.usuario;
+            let usuarios = state.usuarios;
+            for (let index = 0; index < usuarios.length; index++) {
+                let {identificacion} = usuarios[index];
+                if(identificacion === usuario.identificacion){
+                    usuarios[index] = usuario;
+                    break;
+                }
+            }
+            return {
+                ...state,
+                usuarios
             }
         }
         

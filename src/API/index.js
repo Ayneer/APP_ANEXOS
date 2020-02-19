@@ -128,8 +128,47 @@ Api.crearUsuario = async (usuario) => {
     return respuesta;
 }
 
-Api.actualizarUsuario = () => {
+Api.actualizarUsuario = async (identificacion, actualizacion, usuariOriginal) => {
+    let respuesta = {
+        mensaje: "",
+        error: null,
+        usuario: null
+    };
 
+    try {
+        const resultado = await fetch(URL + '/usuario/', {
+            method: 'PUT',
+            body: JSON.stringify({identificacion, actualizacion, usuariOriginal}),
+            headers: {
+                'Authorization': 'Bearer ' + Autenticacion.obtenerToken().Token,
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Accept': 'application/json',
+            }
+        });
+
+        const resultadoJson = await resultado.json();
+        
+        if (resultadoJson.error) {
+            respuesta.error = true;
+            if (resultadoJson.mensajeError) {
+                respuesta.mensaje = resultadoJson.mensajeError;
+            } else if(resultadoJson.status){
+                respuesta.mensaje = resultadoJson.status;
+            } else {
+                respuesta.mensaje = resultadoJson.mensaje ? resultadoJson.mensaje : resultadoJson.error;
+            }
+
+        } else {
+            respuesta.error = false;
+            respuesta.usuario = resultadoJson.usuarioActualizado;
+        }
+    } catch (error) {
+        console.log(error)
+        respuesta.error = true;
+        respuesta.mensaje = error.message;
+    }
+
+    return respuesta;
 }
 
 Api.eliminarUsuario = async (identificacion) => {

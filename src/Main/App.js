@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import ResizeDetector from 'react-resize-detector';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import cx from 'classnames';
 import Loader from 'react-loaders';
 import AppMain from '../Layout';
@@ -11,25 +11,28 @@ import Autenticacion from '../Autenticacion';
 class App extends Component {
 
   componentDidMount = async () => {
-    if(!Autenticacion.obtenerToken()){
-      this.props.volverLoginDispatch(null, false);
-    }else if(!this.props.usuario){
-      this.props.recuperarUsuarioDispatch();
+
+    const { usuario, volverLoginDispatch, recuperarUsuarioDispatch} = this.props;
+
+    if (!Autenticacion.obtenerToken()) {
+      volverLoginDispatch(null, false);
+    } else if (!usuario) {
+      recuperarUsuarioDispatch();
     }
   }
 
   render() {
 
-    let { colorScheme, 
-        enableFixedHeader, 
-        enableFixedSidebar, 
-        enableFixedFooter, 
-        enableClosedSidebar, 
-        closedSmallerSidebar, 
-        enableMobileMenu, 
-        enablePageTabsAlt,
-        usuario,
-      } = this.props;
+    let { colorScheme,
+      enableFixedHeader,
+      enableFixedSidebar,
+      enableFixedFooter,
+      enableClosedSidebar,
+      closedSmallerSidebar,
+      enableMobileMenu,
+      enablePageTabsAlt,
+      usuario,
+    } = this.props;
 
     let { cargandoSesion } = this.props;
 
@@ -48,17 +51,17 @@ class App extends Component {
               { 'sidebar-mobile-open': enableMobileMenu },
               { 'body-tabs-shadow-btn': enablePageTabsAlt },
             )}>
-              {cargandoSesion ? 
-              <div className="loader-container">
-                    <div className="loader-container-inner">
-                        <div className="text-center">
-                            <Loader type="ball-grid-beat" />
-                        </div>
-                        <h6 className="mt-3">
-                            Por favor espere.
-                            <small>Cargando la sesión</small>
-                        </h6>
+              {cargandoSesion ?
+                <div className="loader-container">
+                  <div className="loader-container-inner">
+                    <div className="text-center">
+                      <Loader type="ball-grid-beat" />
                     </div>
+                    <h6 className="mt-3">
+                      Por favor espere.
+                            <small>Cargando la sesión</small>
+                    </h6>
+                  </div>
                 </div> : <AppMain usuario={usuario} />}
             </div>
           </Fragment>
@@ -81,6 +84,7 @@ const mapStateToProp = state => ({
 
   usuario: state.Autenticacion.usuario,
   cargandoSesion: state.Autenticacion.cargandoSesionRecuperada,
+  datos_select_cargados: state.RegistroUsuario.datos_select_cargados,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -6,6 +6,7 @@ import PageTitle from '../../../Layout/PageTitle';
 import TablaContainer from '../../TablaOne';
 import { connect } from 'react-redux';
 import { buscarUsuarios, eliminarUsuario, handlerMensajeEliminarAlerta, alterarAlr_s_u } from '../../../Actions/Usuarios';
+import {accionarMenuFlotante} from '../../../Actions/MenuFlotante';
 
 class UsuariosDashboard extends Component {
 
@@ -32,9 +33,14 @@ class UsuariosDashboard extends Component {
         this.props.alterarAlr_s_u_d(mensaje, estado)
     }
 
+    _accionarMenu = (usuario, estado) => {
+        const {accionarMenuFlotanteDispatch} = this.props;
+        accionarMenuFlotanteDispatch(usuario, estado);
+    }
+
     render() {
 
-        let { usuarios, cargandoUsuarios, errorCargarUsuario, mensajeError, usuario, eliminandoUsuario, errorEliminarUsuario, eliminarMensajeError, usuarioEliminado, mensajeExitoEliminar } = this.props;
+        let { usuarios, cargandoUsuarios, errorCargarUsuario, mensajeError, usuario, eliminandoUsuario, errorEliminarUsuario, eliminarMensajeError, usuarioEliminado, mensajeExitoEliminar, accionarMenu } = this.props;
         
         usuarios = usuarios.filter((user) => user.identificacion !== usuario.identificacion);
 
@@ -50,11 +56,11 @@ class UsuariosDashboard extends Component {
                     <PageTitle
                         heading="Mis usuarios"
                         subheading="Gestión de usuarios registrados en la aplicación."
-                        icon="pe-7s-note2 icon-gradient bg-ripe-malin"
+                        icon="pe-7s-users icon-gradient bg-ripe-malin"
                     />
                     <Fragment>
                         <Container fluid className="mb-5">
-                            <TablaContainer mensajeExitoEliminar={mensajeExitoEliminar} datoEliminado={usuarioEliminado} alterarAlertaEliminarError={this.alterarAlertaEliminarUsuario} alterarAlertaEliminarSuccess={this.alterarAlertaEliminarUsuarioSuccess} eliminarMensajeError={eliminarMensajeError} errorEliminarDato={errorEliminarUsuario} eliminandoDato={eliminandoUsuario} eliminarDato={this.eliminarUsuarioSistema} cargandoDatos={cargandoUsuarios} datos={usuarios} error={errorCargarUsuario} mensajeError={mensajeError} />
+                            <TablaContainer mensajeExitoEliminar={mensajeExitoEliminar} datoEliminado={usuarioEliminado} alterarAlertaEliminarError={this.alterarAlertaEliminarUsuario} alterarAlertaEliminarSuccess={this.alterarAlertaEliminarUsuarioSuccess} eliminarMensajeError={eliminarMensajeError} errorEliminarDato={errorEliminarUsuario} eliminandoDato={eliminandoUsuario} eliminarDato={this.eliminarUsuarioSistema} cargandoDatos={cargandoUsuarios} datos={usuarios} error={errorCargarUsuario} mensajeError={mensajeError} accionarMenuFlotante={this._accionarMenu} estadoMenu={accionarMenu} />
                         </Container>
                     </Fragment>
                 </ReactCSSTransitionGroup>
@@ -76,7 +82,7 @@ const mapStateToProps = state => {
         usuarioEliminado: state.Usuarios.usuarioEliminado,
         mensajeExitoEliminar: state.Usuarios.mensajeExitoEliminar,
         usuariosCargados: state.Usuarios.usuariosCargados,
-        
+        accionarMenu: state.MenuFlotante.accionarMenu,
     }
 }
 
@@ -86,6 +92,7 @@ const mapDispatchToProps = dispatch => {
         eliminarUsuarioDispatch: (identificacion) => dispatch(eliminarUsuario(identificacion)),
         handlerMensajeEliminarAlertaDispatch: (mensaje, estado) => dispatch(handlerMensajeEliminarAlerta(mensaje, estado)),
         alterarAlr_s_u_d: (mensaje, estado) => dispatch(alterarAlr_s_u(mensaje, estado)),
+        accionarMenuFlotanteDispatch: (usuario, estado) => dispatch(accionarMenuFlotante(usuario, estado)),
     }
 }
 

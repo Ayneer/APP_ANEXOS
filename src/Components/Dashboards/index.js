@@ -33,6 +33,7 @@ class Dashboards extends Component {
                             <Switch>{/* Rutas Body */}
                                 <Route exact path={`${match.url}/usuarios`} component={UsuariosDashboard} />
                                 <Route exact path={`${match.url}/registrar`} component={Registro} />
+                                <Route exact path={`${match.url}/editar/:identificacion`} component={Registro} />
 
                                 <Route exact path={`${match.url}/salir`} render={() => this.cerrarSesion()} />
                                 <Route path="/" render={() => <Redirect to={`${match.url}/usuarios`} />} />

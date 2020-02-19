@@ -1,18 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import {
-    NavLink,
-    Table,
-    CardHeader,
-    PopoverBody,
-    Row,
-    Col,
-    Button,
-    Nav,
-    NavItem,
-    Card,
-    UncontrolledPopover,
-    CardFooter
-} from 'reactstrap';
+import { NavLink, Table, CardHeader, PopoverBody, Row, Col, Button, Nav, NavItem, Card, UncontrolledPopover, CardFooter, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 import BlockUi from 'react-block-ui';
 import { Loader } from 'react-loaders';
 import SweetAlert from 'sweetalert-react';
@@ -21,6 +8,7 @@ import ModalUsuario from '../Dashboards/Usuarios/Modal';
 
 import avatar2 from '../../assets/utils/images/avatars/2.jpg';
 import Perfil from './perfil';
+import { withRouter } from 'react-router-dom';
 
 class TablaComponent extends Component {
 
@@ -50,37 +38,39 @@ class TablaComponent extends Component {
 
     eliminarDato = () => {
         this.props.eliminarDato(this.state.identificacion_usuario);
-        // this.setState({ asegurarAccion: false });
     }
 
     cancelarEliminacion = () => {
         this.setState({ asegurarAccion: false, identificacion_usuario: null });
     }
 
-    optMenu = (id) => {
+    optMenu = (usuario) => {
+
+        const { accionarMenuFlotante, estadoMenu } = this.props;
+
         return (
             <Fragment>
-                <Button size="sm" color="primary" id={`PopoverCustomT-${id}`}>
+                <Button size="sm" color="primary" id={`PopoverCustomT-${usuario.identificacion}`}>
                     <span className="pe-7s-more" ></span>
                 </Button>
                 <UncontrolledPopover
                     trigger="legacy"
-                    placement="bottom"
+                    placement="auto"
                     className="popover-custom rm-pointers"
-                    target={`PopoverCustomT-${id}`}>
+                    target={`PopoverCustomT-${usuario.identificacion}`}>
                     <PopoverBody>
                         <Nav vertical>
                             <NavItem className="nav-item-header">
                                 Acciones
                             </NavItem>
                             <NavItem>
-                                <NavLink href="#">Editar</NavLink>
+                                <NavLink href="#" onClick={this._goEditarUsuario}>Editar</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink href="#">Ver perfil</NavLink>
+                                <NavLink href="#" onClick={() => accionarMenuFlotante(usuario, !estadoMenu)} >Ver perfil</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink href="#" onClick={() => this.setState({ asegurarAccion: true, identificacion_usuario: id })}>Eliminar</NavLink>
+                                <NavLink href="#" onClick={() => this.setState({ asegurarAccion: true, identificacion_usuario: usuario.identificacion })}>Eliminar</NavLink>
                             </NavItem>
                             {/* <NavItem>
                                 <NavLink href="#">Recuperar contraseña</NavLink>
@@ -92,14 +82,39 @@ class TablaComponent extends Component {
         )
     }
 
+    opt2Menu = usuario => {
+
+        const { accionarMenuFlotante, estadoMenu } = this.props;
+
+        return (
+            <UncontrolledButtonDropdown direction="left">
+                <DropdownToggle caret className="mb-2 mr-2" color="primary" ></ DropdownToggle>
+                <DropdownMenu >
+                    <Nav vertical>
+                        <NavItem className="nav-item-header"> Acciones </NavItem>
+                        <NavItem>
+                            <NavLink href={`/#/dashboards/editar/${usuario.identificacion}`}> Editar </NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="#" onClick={() => accionarMenuFlotante(usuario, !estadoMenu)} >Ver perfil</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="#" onClick={() => this.setState({ asegurarAccion: true, identificacion_usuario: usuario.identificacion })} >Eliminar</NavLink>
+                        </NavItem>
+                    </Nav>
+                </DropdownMenu>
+            </UncontrolledButtonDropdown>
+        )
+    }
+
     alterarAlertaEliminarError = (mensaje, estado) => {
         this.props.alterarAlertaEliminarError(mensaje, estado);
-        this.setState({ asegurarAccion: false,identificacion_usuario: null });
+        this.setState({ asegurarAccion: false, identificacion_usuario: null });
     }
 
     alterarAlertaEliminarSuccess = (mensaje, estado) => {
         this.props.alterarAlertaEliminarSuccess(mensaje, estado);
-        this.setState({ asegurarAccion: false,identificacion_usuario: null });
+        this.setState({ asegurarAccion: false, identificacion_usuario: null });
     }
 
     render() {
@@ -145,7 +160,7 @@ class TablaComponent extends Component {
                                                 <th>Nombre</th>
                                                 <th className="text-center">Identificación</th>
                                                 <th className="text-center">Correo</th>
-                                                <th className="text-center">Actions</th>
+                                                <th className="text-center">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -166,7 +181,8 @@ class TablaComponent extends Component {
                                                     </td>
 
                                                     <td className="text-center">
-                                                        {this.optMenu(usuario.identificacion)}
+                                                        {/* {this.optMenu(usuario)} */}
+                                                        {this.opt2Menu(usuario)}
                                                     </td>
                                                 </tr>
 
@@ -176,23 +192,15 @@ class TablaComponent extends Component {
                                     </Table>
 
                                     <SweetAlert
-                                        title={ eliminandoDato ? "Eliminando usuario" : "¿Estas seguro?"}
+                                        title={eliminandoDato ? "Eliminando usuario" : "¿Estas seguro?"}
                                         confirmButtonColor=""
                                         show={asegurarAccion}
-                                        text={ eliminandoDato ? "Por favor espere mientra se completa el proceso." : "No podrás revertir esta acción."}
-                                        showCancelButton = { eliminandoDato ? false : true }
-                                        showConfirmButton = { eliminandoDato ? false : true }
+                                        text={eliminandoDato ? "Por favor espere mientra se completa el proceso." : "No podrás revertir esta acción."}
+                                        showCancelButton={eliminandoDato ? false : true}
+                                        showConfirmButton={eliminandoDato ? false : true}
                                         type={"input"}
                                         onConfirm={() => this.eliminarDato()}
                                         onCancel={() => this.cancelarEliminacion()} />
-
-                                    {/* <SweetAlert
-                                        title="Eliminando usuario"
-                                        confirmButtonColor=""
-                                        show={eliminandoDato}
-                                        text="Por favor espere mientra se completa el proceso."
-                                        showCancelButton={false}
-                                        showConfirmButton={false} /> */}
 
                                     <SweetAlert
                                         title="Oops, ah ocurrido un error!"
@@ -222,4 +230,4 @@ class TablaComponent extends Component {
     }
 }
 
-export default TablaComponent;
+export default withRouter(TablaComponent);

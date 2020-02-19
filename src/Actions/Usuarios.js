@@ -73,3 +73,9 @@ export const agregarUsuarioState = (usuario) => {
         dispatch({ type: AGREGAR_USUARIO, usuario });
     }
 }
+
+export const agregarUsuariosState = (usuarios) => {
+    return (dispatch) => {
+        dispatch({ type: CARGAR_USUARIOS, usuarios });
+    }
+}

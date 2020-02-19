@@ -1,4 +1,4 @@
-import { ERROR_REGISTRAR_USUARIO, DATOS_SELECT, ERROR_DATOS_SELECT, ERROR_CAMPO_CONTRASEÑA, REGISTRANDO_USUARIO, USUARIO_REGISTRADO, ALERTA_REGISTRO_ERROR, ALERTA_REGISTRO_SUCCESS, AGREGAR_USUARIO } from '../config/variables';
+import { ERROR_REGISTRAR_USUARIO, DATOS_SELECT, ERROR_DATOS_SELECT, ERROR_CAMPO_CONTRASEÑA, REGISTRANDO_USUARIO, USUARIO_REGISTRADO, ALERTA_REGISTRO_ERROR, ALERTA_REGISTRO_SUCCESS, AGREGAR_USUARIO, ACTUALIZANDO_USUARIO, ERROR_ACTUALIZAR_USUARIO, USUARIO_ACTULIZADO, ACTUALIZAR_USUARIO, ALERTA_REGISTRO_ACT_ERROR, ALERTA_REGISTRO_ACT_SUCCESS } from '../config/variables';
 
 export const lanarError = (mensaje, estado) => {
     return (dispatch) => {
@@ -48,15 +48,36 @@ export const registrarUsuario = (usuario) => {
     }
 }
 
+export const actualizarUsuario = (identificacion, actualizacion, usuariOriginal) => {
+    return (dispatch, getState, Api) => {
+        dispatch({ type: ACTUALIZANDO_USUARIO, estado: true });
+        Api.actualizarUsuario(identificacion, actualizacion, usuariOriginal).then((respuesta)=>{
+            if(respuesta.error){
+                dispatch({ type: ACTUALIZANDO_USUARIO, estado: false });
+                dispatch({ type: ERROR_ACTUALIZAR_USUARIO, estado: true, mensaje: respuesta.mensaje, estadoAlerta: true });
+            }else{
+                dispatch({ type: ACTUALIZANDO_USUARIO, estado: false });
+                dispatch({ type: USUARIO_ACTULIZADO, usuario: respuesta.usuario, estado: true, mensaje: "Usuario actualizado con éxito!" });
+                dispatch({ type: ACTUALIZAR_USUARIO, usuario: respuesta.usuario });
+            }
+        }).catch((error)=>{
+            dispatch({ type: ACTUALIZANDO_USUARIO, estado: false });
+            dispatch({ type: ERROR_ACTUALIZAR_USUARIO, estado: true, mensaje: error.message, estadoAlerta: true });
+        })
+    }
+}
+
 export const handlerAlertaError = (mensaje, estado) => {
     return (dispatch) => {
         dispatch({ type: ALERTA_REGISTRO_ERROR, estado, mensaje });
+        dispatch({ type: ALERTA_REGISTRO_ACT_ERROR, estado, mensaje });
     }
 }
 
 export const handlerAlertaSuccess = (mensaje, estado) => {
     return (dispatch) => {
         dispatch({ type: ALERTA_REGISTRO_SUCCESS, estado, mensaje });
+        dispatch({ type: ALERTA_REGISTRO_ACT_SUCCESS, estado, mensaje });
     }
 }
 

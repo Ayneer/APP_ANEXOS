@@ -11,6 +11,7 @@ import city3 from '../../../assets/utils/images/dropdown-header/city3.jpg';
 import avatar1 from '../../../assets/utils/images/avatars/1.jpg';
 
 import { cerrarSesion } from '../../../Actions/Autenticacion';
+import {accionarMenuFlotante} from '../../../Actions/MenuFlotante';
 import { connect } from 'react-redux';
 
 class UserBox extends React.Component {
@@ -35,10 +36,15 @@ class UserBox extends React.Component {
         cerrarSesionDispatch();
     }
 
+    _accionarMenu = (usuario, estado) => {
+        const {accionarMenuFlotanteDispatch} = this.props;
+        accionarMenuFlotanteDispatch(usuario, estado);
+    }
+
     render() {
 
-        const { usuario } = this.props;
-        console.log(usuario)
+        const { usuario, accionarMenu } = this.props;
+
         return (
             <Fragment>
                 <div className="header-btn-lg pr-0">
@@ -70,7 +76,7 @@ class UserBox extends React.Component {
                                                                     {usuario.nombres}
                                                                 </div>
                                                                 <div className="widget-subheading opacity-8">
-                                                                    {`Rol ${usuario.id_rol}`}
+                                                                    {`${usuario.tipo_perfil}`}
                                                                 </div>
                                                             </div>
                                                             <div className="widget-content-right mr-2">
@@ -91,6 +97,11 @@ class UserBox extends React.Component {
                                                 <Nav vertical>
                                                     <NavItem className="nav-item-header">
                                                         Mi cuenta
+                                                    </NavItem>
+                                                    <NavItem>
+                                                        <NavLink href="#" onClick={ () => this._accionarMenu(usuario, !accionarMenu) } >
+                                                            Perfil
+                                                        </NavLink>
                                                     </NavItem>
                                                     <NavItem>
                                                         <NavLink href="#">
@@ -114,7 +125,7 @@ class UserBox extends React.Component {
                                     {usuario.nombres}
                                 </div>
                                 <div className="widget-subheading">
-                                    {`Rol ${usuario.id_rol}`}
+                                    {`${usuario.tipo_perfil}`}
                                 </div>
                             </div>
                         </div>
@@ -128,12 +139,14 @@ class UserBox extends React.Component {
 const mapStateToProps = state => {
     return {
         usuario: state.Autenticacion.usuario,
+        accionarMenu: state.MenuFlotante.accionarMenu,
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        cerrarSesionDispatch: () => dispatch(cerrarSesion())
+        cerrarSesionDispatch: () => dispatch(cerrarSesion()),
+        accionarMenuFlotanteDispatch: (usuario, estado) => dispatch(accionarMenuFlotante(usuario, estado)),
     }
 };
 

@@ -1,12 +1,9 @@
 import React, {Fragment} from 'react';
 
 import Hamburger from 'react-hamburgers';
-
 import PerfectScrollbar from 'react-perfect-scrollbar';
-
 import Drawer from 'react-motion-drawer';
-
-import DrawerBigExample from './TabsContent/DrawerBigExample';
+import DrawerBigExample from './TabsContent/Perfil';
 
 class HeaderRightDrawer extends React.Component {
     constructor(props) {

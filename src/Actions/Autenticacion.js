@@ -2,7 +2,7 @@ import { CARGAR_USUARIO_SESION, ERROR_INICIAR_SESION, CARGANDO_SESION, RECUPERAN
 import Autenticacion from '../Autenticacion';
 
 export const cargarUsuario = (usuario) => {
-    return (dispatch, Api) => {
+    return (dispatch, getState, Api) => {
         dispatch({ type: CARGAR_USUARIO_SESION, usuario });
     }
 }

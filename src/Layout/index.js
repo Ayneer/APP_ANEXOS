@@ -7,7 +7,7 @@ const Dashboards = lazy(() => import('../Components/Dashboards'));
 const Login = lazy(() => import('../Components/LoginBoxed'));
 
 const redireccionar = (component) => {
-    window.history.replaceState(null, null, "/");
+    window.history.replaceState(null, null, "/#");
     return <Redirect to={`${component}`} />
 }
 

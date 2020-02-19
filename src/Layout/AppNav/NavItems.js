@@ -1,6 +1,6 @@
 export const MainNav = [
     {
-        icon: 'pe-7s-rocket',
+        icon: 'pe-7s-users',
         label: 'Usuarios',
         content: [
             {

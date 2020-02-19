@@ -7,9 +7,8 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import HeaderLogo from '../AppLogo';
 import SearchBox from './Components/SearchBox';
-// import MegaMenu from './Components/MegaMenu';
 import UserBox from './Components/UserBox';
-// import HeaderRightDrawer from "./Components/HeaderRightDrawer";
+import MenuFlotante from "./Components/MenuFlotante";
 import HeaderDots from "./Components/HeaderDots";
 
 class Header extends React.Component {
@@ -30,18 +29,19 @@ class Header extends React.Component {
                     transitionEnter={false}
                     transitionLeave={false}>
 
-                    <HeaderLogo/>
+                    <HeaderLogo />
 
                     <div className={cx(
                         "app-header__content",
                         {'header-mobile-open': enableMobileMenuSmall},
                     )}>
                         <div className="app-header-left">
-                            <SearchBox/>
+                            <SearchBox />
                         </div>
                         <div className="app-header-right">
-                            <HeaderDots/>
-                            <UserBox/>
+                            <HeaderDots />
+                            <UserBox />
+                            <MenuFlotante />
                         </div>
                     </div>
                 </ReactCSSTransitionGroup>
