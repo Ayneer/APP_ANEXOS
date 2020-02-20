@@ -10,7 +10,7 @@ const store = configureStore();
 
 const renderApp = Componente => (
     <Provider store={store}>
-        <HashRouter>
+        <HashRouter> {/* HashRouter */}
             <Componente />
         </HashRouter>
     </Provider>

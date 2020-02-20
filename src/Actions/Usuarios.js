@@ -1,4 +1,4 @@
-import { CARGAR_USUARIOS, ERROR_CARGAR_USUARIOS, ERROR_ELIMINAR_USUARIO, USUARIO_ELIMINADO, ELIMINANDO_USUARIO, ELIMINANDO_USUARIO_ALERTA, AGREGAR_USUARIO, ELIMINAR_USUARIO } from '../config/variables';
+import { CARGAR_USUARIOS, ERROR_CARGAR_USUARIOS, ERROR_ELIMINAR_USUARIO, USUARIO_ELIMINADO, ELIMINANDO_USUARIO, USUARIO_NO_ELIMINADO, AGREGAR_USUARIO, ELIMINAR_USUARIO } from '../config/variables';
 
 export const cargarUsuarios = (usuarios) => {
     return (dispatch) => {
@@ -50,13 +50,13 @@ export const eliminarUsuario = (identificacion) => {
     }
 }
 
-export const handlerMensajeEliminarAlerta = (mensaje, estado) => {
+export const alertaUsuarioNoEliminado = (mensaje, estado) => {
     return (dispatch) => {
-        dispatch({ type: ELIMINANDO_USUARIO_ALERTA, estado, mensaje });
+        dispatch({ type: USUARIO_NO_ELIMINADO, estado, mensaje });
     }
 }
 
-export const alterarAlr_s_u = (mensaje, estado) => {
+export const alertaUsuarioEliminado = (mensaje, estado) => {
     return (dispatch) => {
         dispatch({ type: USUARIO_ELIMINADO, estado, mensaje });
     }

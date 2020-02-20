@@ -5,7 +5,7 @@ const initState = {
     accionarMenu: false
 }
 
-const menuFlotante = (state = initState, action) => {
+export const MenuFlotante = (state = initState, action) => {
     switch (action.type) {
 
         case ACCIONAR_MENU_FLOTANTE:
@@ -20,4 +20,4 @@ const menuFlotante = (state = initState, action) => {
     }
 }
 
-export default menuFlotante;
+export const estadoMenu = state => state.accionarMenu;

@@ -11,7 +11,7 @@ const initState = {
     mensaje_alerta_success_act: ""
 }
 
-const editarUsuario = (state = initState, action) => {
+export const EditarUsuario = (state = initState, action) => {
     switch (action.type) {
 
         case EDITAR_USUARIO:
@@ -62,4 +62,9 @@ const editarUsuario = (state = initState, action) => {
     }
 }
 
-export default editarUsuario;
+export const obtenerUsuarioEditar = state => state.usuarioEditar;
+export const estaActualizandoRegistro = state => state.actualizandoRegistro;
+export const alertaActualizarError = state => state.estadoAlertaActualizarError;
+export const mensajeActualizarError = state => state.errorActualizarMensaje;
+export const alertaActualizarSuccess = state => state.estado_alerta_success_act;
+export const mensajeActualizarSuccess = state => state.mensaje_alerta_success_act;

@@ -3,6 +3,7 @@ import { Col, Row, Form, FormGroup, Input, FormFeedback } from 'reactstrap';
 import { connect } from 'react-redux';
 import LaddaButton, { EXPAND_LEFT } from 'react-ladda';
 import { iniciarSesion, lanarError } from '../../Actions/Autenticacion';
+import { estanErradasCredenciales, mensajeCredencialesErradas, estaValidandoCredenciales } from '../../reducers/Autenticacion';
 
 class LoginBoxed extends Component {
 
@@ -117,10 +118,10 @@ class LoginBoxed extends Component {
 
 };
 
-const mapStateToProps = state => ({
-    credencialesError: state.Autenticacion.credencialesError,
-    credencialesMensaje: state.Autenticacion.credencialesMensaje,
-    cargandoSesion: state.Autenticacion.cargandoSesion,
+const mapStateToProps = ({Autenticacion}) => ({
+    credencialesError: estanErradasCredenciales(Autenticacion),
+    credencialesMensaje: mensajeCredencialesErradas(Autenticacion),
+    cargandoSesion: estaValidandoCredenciales(Autenticacion),
 });
 
 const mapDispatchToProps = dispatch => ({

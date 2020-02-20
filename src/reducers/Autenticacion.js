@@ -8,7 +8,7 @@ const initState = {
     cargandoSesionRecuperada: true
 }
 
-const autenticacion = (state = initState, action) => {
+export const Autenticacion = (state = initState, action) => {
     switch (action.type) {
 
         case CARGAR_USUARIO_SESION:
@@ -40,4 +40,8 @@ const autenticacion = (state = initState, action) => {
     }
 }
 
-export default autenticacion;
+export const obtenerUsuarioAutenticado = state => state.usuario;
+export const estaCargandoSesion = state => state.cargandoSesionRecuperada;
+export const estaValidandoCredenciales = state => state.cargandoSesion;
+export const estanErradasCredenciales = state => state.credencialesError;
+export const mensajeCredencialesErradas = state => state.credencialesMensaje;

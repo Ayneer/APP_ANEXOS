@@ -7,6 +7,7 @@ import Loader from 'react-loaders';
 import AppMain from '../Layout';
 import { cargarUsuario, obtenerUsuario, volerLogin } from '../Actions/Autenticacion';
 import Autenticacion from '../Autenticacion';
+import { obtenerUsuarioAutenticado, estaCargandoSesion } from '../reducers/Autenticacion';
 
 class App extends Component {
 
@@ -19,20 +20,12 @@ class App extends Component {
     } else if (!usuario) {
       recuperarUsuarioDispatch();
     }
+    
   }
 
   render() {
 
-    let { colorScheme,
-      enableFixedHeader,
-      enableFixedSidebar,
-      enableFixedFooter,
-      enableClosedSidebar,
-      closedSmallerSidebar,
-      enableMobileMenu,
-      enablePageTabsAlt,
-      usuario,
-    } = this.props;
+    let { colorScheme, enableFixedHeader, enableFixedSidebar, enableFixedFooter, enableClosedSidebar, closedSmallerSidebar, enableMobileMenu, enablePageTabsAlt, usuario,} = this.props;
 
     let { cargandoSesion } = this.props;
 
@@ -59,7 +52,7 @@ class App extends Component {
                     </div>
                     <h6 className="mt-3">
                       Por favor espere.
-                            <small>Cargando la sesión</small>
+                      <small>Cargando la sesión</small>
                     </h6>
                   </div>
                 </div> : <AppMain usuario={usuario} />}
@@ -73,18 +66,17 @@ class App extends Component {
   }
 }
 
-const mapStateToProp = state => ({
-  colorScheme: state.ThemeOptions.colorScheme,
-  enableFixedHeader: state.ThemeOptions.enableFixedHeader,
-  enableMobileMenu: state.ThemeOptions.enableMobileMenu,
-  enableFixedFooter: state.ThemeOptions.enableFixedFooter,
-  enableFixedSidebar: state.ThemeOptions.enableFixedSidebar,
-  enableClosedSidebar: state.ThemeOptions.enableClosedSidebar,
-  enablePageTabsAlt: state.ThemeOptions.enablePageTabsAlt,
+const mapStateToProp = ({ThemeOptions, Autenticacion}) => ({
+  colorScheme: ThemeOptions.colorScheme,
+  enableFixedHeader: ThemeOptions.enableFixedHeader,
+  enableMobileMenu: ThemeOptions.enableMobileMenu,
+  enableFixedFooter: ThemeOptions.enableFixedFooter,
+  enableFixedSidebar: ThemeOptions.enableFixedSidebar,
+  enableClosedSidebar: ThemeOptions.enableClosedSidebar,
+  enablePageTabsAlt: ThemeOptions.enablePageTabsAlt,
 
-  usuario: state.Autenticacion.usuario,
-  cargandoSesion: state.Autenticacion.cargandoSesionRecuperada,
-  datos_select_cargados: state.RegistroUsuario.datos_select_cargados,
+  usuario: obtenerUsuarioAutenticado(Autenticacion), 
+  cargandoSesion: estaCargandoSesion(Autenticacion),
 });
 
 const mapDispatchToProps = dispatch => ({

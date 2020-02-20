@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { NavLink, Table, CardHeader, PopoverBody, Row, Col, Button, Nav, NavItem, Card, UncontrolledPopover, CardFooter, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
+import { NavLink, Table, CardHeader, PopoverBody, Row, Col, Button, Nav, NavItem, Card, UncontrolledPopover, CardFooter} from 'reactstrap';
 import BlockUi from 'react-block-ui';
 import { Loader } from 'react-loaders';
 import SweetAlert from 'sweetalert-react';
@@ -22,25 +22,24 @@ class TablaComponent extends Component {
             identificacion_usuario: null
         }
 
-        this.toggleModal = this.toggleModal.bind(this);
+        this._toggleModal = this._toggleModal.bind(this);
     }
 
-    ocultarAlerta = () => {
+    _ocultarAlerta = () => {
         this.setState({ mostrarAlerta: false });
     }
 
-    toggleModal() {
-        console.log("d")
+    _toggleModal() {
         this.setState({
             modalEstado: !this.state.modalEstado
         });
     }
 
-    eliminarDato = () => {
+    _eliminarDato = () => {
         this.props.eliminarDato(this.state.identificacion_usuario);
     }
 
-    cancelarEliminacion = () => {
+    _cancelarEliminacion = () => {
         this.setState({ asegurarAccion: false, identificacion_usuario: null });
     }
 
@@ -50,12 +49,12 @@ class TablaComponent extends Component {
 
         return (
             <Fragment>
-                <Button size="sm" color="primary" id={`PopoverCustomT-${usuario.identificacion}`}>
+                <Button size="sm" className="btn-pill" color="link" id={`PopoverCustomT-${usuario.identificacion}`}>
                     <span className="pe-7s-more" ></span>
                 </Button>
                 <UncontrolledPopover
                     trigger="legacy"
-                    placement="auto"
+                    placement="top"
                     className="popover-custom rm-pointers"
                     target={`PopoverCustomT-${usuario.identificacion}`}>
                     <PopoverBody>
@@ -64,7 +63,7 @@ class TablaComponent extends Component {
                                 Acciones
                             </NavItem>
                             <NavItem>
-                                <NavLink href="#" onClick={this._goEditarUsuario}>Editar</NavLink>
+                                <NavLink href={`/#/dashboards/editar/${usuario.identificacion}`}>Editar</NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink href="#" onClick={() => accionarMenuFlotante(usuario, !estadoMenu)} >Ver perfil</NavLink>
@@ -82,38 +81,13 @@ class TablaComponent extends Component {
         )
     }
 
-    opt2Menu = usuario => {
-
-        const { accionarMenuFlotante, estadoMenu } = this.props;
-
-        return (
-            <UncontrolledButtonDropdown direction="left">
-                <DropdownToggle caret className="mb-2 mr-2" color="primary" ></ DropdownToggle>
-                <DropdownMenu >
-                    <Nav vertical>
-                        <NavItem className="nav-item-header"> Acciones </NavItem>
-                        <NavItem>
-                            <NavLink href={`/#/dashboards/editar/${usuario.identificacion}`}> Editar </NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="#" onClick={() => accionarMenuFlotante(usuario, !estadoMenu)} >Ver perfil</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="#" onClick={() => this.setState({ asegurarAccion: true, identificacion_usuario: usuario.identificacion })} >Eliminar</NavLink>
-                        </NavItem>
-                    </Nav>
-                </DropdownMenu>
-            </UncontrolledButtonDropdown>
-        )
-    }
-
-    alterarAlertaEliminarError = (mensaje, estado) => {
-        this.props.alterarAlertaEliminarError(mensaje, estado);
+    _alertaEliminarError = (mensaje, estado) => {
+        this.props.alertaEliminarError(mensaje, estado);
         this.setState({ asegurarAccion: false, identificacion_usuario: null });
     }
 
-    alterarAlertaEliminarSuccess = (mensaje, estado) => {
-        this.props.alterarAlertaEliminarSuccess(mensaje, estado);
+    _alertaEliminarSuccess = (mensaje, estado) => {
+        this.props.alertaEliminarSuccess(mensaje, estado);
         this.setState({ asegurarAccion: false, identificacion_usuario: null });
     }
 
@@ -127,7 +101,7 @@ class TablaComponent extends Component {
                 <Col md="12">
                     <Card className="main-card mb-6">
 
-                        <ModalUsuario modalEstado={modalEstado} toggle={this.toggleModal} />
+                        <ModalUsuario modalEstado={modalEstado} toggle={this._toggleModal} />
 
                         <CardHeader>
                             Usuarios activos
@@ -146,14 +120,14 @@ class TablaComponent extends Component {
                                         show={mostrarAlerta}
                                         text="You clicked the button!"
                                         type="warning"
-                                        onConfirm={this.ocultarAlerta} />
+                                        onConfirm={this._ocultarAlerta} />
                                 </div>
                                 :
                                 <div style={{
                                     maxHeight: '500px',
                                     overflowY: 'auto'
                                 }}>
-                                    <Table responsive hover striped borderless className="align-middle mb-2">
+                                    <Table responsive hover striped borderless className="align-middle mb-2" id="tablaComponente1">
                                         <thead >
                                             <tr>
                                                 <th className="text-center">#</th>
@@ -181,8 +155,7 @@ class TablaComponent extends Component {
                                                     </td>
 
                                                     <td className="text-center">
-                                                        {/* {this.optMenu(usuario)} */}
-                                                        {this.opt2Menu(usuario)}
+                                                        {this.optMenu(usuario)}
                                                     </td>
                                                 </tr>
 
@@ -199,8 +172,8 @@ class TablaComponent extends Component {
                                         showCancelButton={eliminandoDato ? false : true}
                                         showConfirmButton={eliminandoDato ? false : true}
                                         type={"input"}
-                                        onConfirm={() => this.eliminarDato()}
-                                        onCancel={() => this.cancelarEliminacion()} />
+                                        onConfirm={() => this._eliminarDato()}
+                                        onCancel={() => this._cancelarEliminacion()} />
 
                                     <SweetAlert
                                         title="Oops, ah ocurrido un error!"
@@ -208,7 +181,7 @@ class TablaComponent extends Component {
                                         show={errorEliminarDato}
                                         text={eliminarMensajeError}
                                         type="error"
-                                        onConfirm={() => this.alterarAlertaEliminarError("", false)} />
+                                        onConfirm={() => this._alertaEliminarError("", false)} />
 
                                     <SweetAlert
                                         title="Proceso exitoso!"
@@ -216,7 +189,7 @@ class TablaComponent extends Component {
                                         show={datoEliminado}
                                         text={mensajeExitoEliminar}
                                         type="success"
-                                        onConfirm={() => this.alterarAlertaEliminarSuccess("", false)} />
+                                        onConfirm={() => this._alertaEliminarSuccess("", false)} />
 
                                 </div>
                             }

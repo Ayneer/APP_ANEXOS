@@ -2,14 +2,15 @@ export const MainNav = [
     {
         icon: 'pe-7s-users',
         label: 'Usuarios',
+        to: "#/dashboards",
         content: [
             {
                 label: 'Registrar',
-                to: '/#/dashboards/registrar',
+                to: '#/dashboards/registrar',
             },
             {
                 label: 'Listar',
-                to: '/#/dashboards/usuarios',
+                to: '#/dashboards/usuarios',
             }
 
         ],

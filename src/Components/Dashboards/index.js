@@ -4,7 +4,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 // Layout
 import AppHeader from '../../Layout/AppHeader/';
 import AppSidebar from '../../Layout/AppSidebar/';
-import AppFooter from '../../Layout/AppFooter/';
+// import AppFooter from '../../Layout/AppFooter/';
 
 import { cerrarSesion } from '../../Actions/Autenticacion';
 import { connect } from 'react-redux';
@@ -12,11 +12,18 @@ import { connect } from 'react-redux';
 // DASHBOARDS
 import UsuariosDashboard from './Usuarios';
 import Registro from '../Registro';
+import { limpiarRegistro } from '../../Actions/Registro';
 
 class Dashboards extends Component {
-    cerrarSesion = () => {
+
+    _cerrarSesion = () => {
         const {cerrarSesionDispatch} = this.props;
         cerrarSesionDispatch();
+    }
+
+    _abrirNuevoRegistro = () => {
+        this.props.limpiarRegistro();
+        return <Registro />;
     }
 
     render() {
@@ -32,14 +39,14 @@ class Dashboards extends Component {
                         <div className="app-main__inner">
                             <Switch>{/* Rutas Body */}
                                 <Route exact path={`${match.url}/usuarios`} component={UsuariosDashboard} />
-                                <Route exact path={`${match.url}/registrar`} component={Registro} />
+                                <Route exact path={`${match.url}/registrar`} render={()=> this._abrirNuevoRegistro()} />
                                 <Route exact path={`${match.url}/editar/:identificacion`} component={Registro} />
 
-                                <Route exact path={`${match.url}/salir`} render={() => this.cerrarSesion()} />
+                                <Route exact path={`${match.url}/salir`} render={() => this._cerrarSesion()} />
                                 <Route path="/" render={() => <Redirect to={`${match.url}/usuarios`} />} />
                             </Switch>
                         </div>{/* Body Fin */}
-                        <AppFooter /> {/* Footer */}
+                        {/* <AppFooter /> Footer */}
                     </div>
                 </div>
             </Fragment>
@@ -48,16 +55,10 @@ class Dashboards extends Component {
 
 };
 
-const mapStateoProps = state => {
-    return{
-
-    }
-}
-
-const mapDispatchToPros = dispatch => {
-    return {
-        cerrarSesionDispatch: () => dispatch(cerrarSesion())
-    }
-}
+const mapStateoProps = state => ({});
+const mapDispatchToPros = dispatch => ({ 
+    cerrarSesionDispatch: () => dispatch(cerrarSesion()),
+    limpiarRegistro: () => dispatch(limpiarRegistro())
+});
 
 export default connect(mapStateoProps, mapDispatchToPros)(Dashboards);

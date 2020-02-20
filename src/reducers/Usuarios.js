@@ -1,4 +1,4 @@
-import { CARGAR_USUARIOS, ERROR_CARGAR_USUARIOS, USUARIO_ELIMINADO, ERROR_ELIMINAR_USUARIO, ELIMINANDO_USUARIO, ELIMINANDO_USUARIO_ALERTA, ELIMINAR_USUARIO, AGREGAR_USUARIO, ACTUALIZAR_USUARIO } from '../config/variables';
+import { CARGAR_USUARIOS, ERROR_CARGAR_USUARIOS, USUARIO_ELIMINADO, ERROR_ELIMINAR_USUARIO, ELIMINANDO_USUARIO, USUARIO_NO_ELIMINADO, ELIMINAR_USUARIO, AGREGAR_USUARIO, ACTUALIZAR_USUARIO } from '../config/variables';
 
 const initState = {
     usuarios: [],
@@ -13,7 +13,7 @@ const initState = {
     usuariosCargados: false
 }
 
-const usuario = (state = initState, action) => {
+export const Usuarios = (state = initState, action) => {
     switch (action.type) {
 
         case CARGAR_USUARIOS:
@@ -53,7 +53,7 @@ const usuario = (state = initState, action) => {
                 eliminandoUsuario: action.estado
             }
 
-        case ELIMINANDO_USUARIO_ALERTA:
+        case USUARIO_NO_ELIMINADO:
             return {
                 ...state,
                 errorEliminarUsuario: action.estado,
@@ -97,4 +97,13 @@ const usuario = (state = initState, action) => {
     }
 }
 
-export default usuario;
+export const obtenerUsuarios = state => state.usuarios;
+export const estanCargandoUsuarios = state => state.cargandoUsuarios;
+export const usuariosCargadosConExito = state => state.usuariosCargados;
+export const errorCargandoUsuarios = state => state.errorCargarUsuario;
+export const mensajeErrorCargarUsuarios = state => state.mensajeError;
+export const estaEliminandoUsuario = state => state.eliminandoUsuario;
+export const errorEliminandoUsuario = state => state.errorEliminarUsuario;
+export const mensajeErrorEliminarUsuario = state => state.eliminarMensajeError;
+export const usuarioEliminadoConExito = state => state.usuarioEliminado;
+export const mensajeExitoEliminandoUsuario = state => state.mensajeExitoEliminar;

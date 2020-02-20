@@ -164,3 +164,14 @@
 // Responsive
 
 @import "layout/responsive/responsive-base";
+
+// Tabla 1
+#tablaComponente1 .dropdown-menu::before, .dropdown-menu::after { 
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.popover {
+    z-index: 8 !important;
+}
+

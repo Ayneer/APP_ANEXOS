@@ -1,4 +1,4 @@
-import { CARGAR_USUARIO_SESION, ERROR_INICIAR_SESION, CARGANDO_SESION, RECUPERANDO_SESION } from '../config/variables';
+import { CARGAR_USUARIO_SESION, ERROR_INICIAR_SESION, CARGANDO_SESION, RECUPERANDO_SESION, LIMPIAR_STATE_SALIR } from '../config/variables';
 import Autenticacion from '../Autenticacion';
 
 export const cargarUsuario = (usuario) => {
@@ -35,6 +35,7 @@ export const cerrarSesion = () => {
         Autenticacion.eliminarToken();
         if (!Autenticacion.obtenerToken()) {
             dispatch({ type: CARGAR_USUARIO_SESION, usuario: null });
+            dispatch({ type: LIMPIAR_STATE_SALIR });
         } else {
             console.log("Error al intentar borrar la sesion")
         }
