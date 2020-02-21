@@ -9,8 +9,6 @@ class Perfil extends Component {
 
         const { usuario } = this.props;
 
-        console.log(usuario)
-
         return (
             <Fragment>
                 <h3 className="drawer-heading">

@@ -6,11 +6,14 @@ import { connect } from 'react-redux';
 import LaddaButton, { EXPAND_LEFT } from 'react-ladda';
 import PageTitle from '../../Layout/PageTitle';
 
-import { lanarErrorRegistro, lanzarErrorContraseña, handlerAlertaError, registrarUsuario, handlerAlertaSuccess, buscarDatosSelect, actualizarUsuario, handlerRegistro } from '../../Actions/Registro';
+import { lanarErrorRegistro, lanzarErrorContraseña, handlerAlertaError, registrarUsuario, handlerAlertaSuccess, buscarDatosSelect, actualizarUsuario, handlerRegistro, handlerUsuarioRegistro, limpiarFormRegistro } from '../../Actions/Registro';
 import { buscarUsuarios, agregarUsuariosState } from '../../Actions/Usuarios';
 import { withRouter } from 'react-router-dom';
 import Api from '../../API';
-import { estanCargadosDatosSelect, errorCargarDatosSelect, errorCampoContraseña, obtenerMensajeErrorContraseña, estanRegistrandoUsuario, obtenerEstadoAlertaError, obtenerMensajeAlertaError, obtenerResultadoRegistro, obtenerEstadoAlertaSuccess, obtenerMensajeAlertaSuccess, obtenerMensajeRegistro, errorEnRegistro, obtenerTiposIdentificacion, obtenerTiposRol } from '../../reducers/RegistroUsuario';
+import {
+    estanCargadosDatosSelect, errorCargarDatosSelect, errorCampoContraseña, obtenerMensajeErrorContraseña, estanRegistrandoUsuario, obtenerEstadoAlertaError, obtenerMensajeAlertaError, obtenerResultadoRegistro, obtenerEstadoAlertaSuccess, obtenerMensajeAlertaSuccess, obtenerMensajeRegistro, errorEnRegistro, obtenerTiposIdentificacion, obtenerTiposRol,
+    obtenerNombres, obtenerTelefono, obtenerId_identificacion, obtenerIdentificacion, obtenerCorreo, obtenerId_rol, obtenerContraseña1, obtenerContraseña2, obtenerApellidos, obtenerEdad
+} from '../../reducers/RegistroUsuario';
 import { obtenerUsuarioEditar, estaActualizandoRegistro, alertaActualizarError, mensajeActualizarError, alertaActualizarSuccess, mensajeActualizarSuccess } from '../../reducers/EditarUsuario';
 import { obtenerUsuarios, usuariosCargadosConExito } from '../../reducers/Usuarios'
 
@@ -20,16 +23,6 @@ class RegisterBoxed extends Component {
         super(props);
 
         this.state = {
-            nombres: "",
-            apellidos: "",
-            edad: "",
-            telefono: "",
-            id_identificacion: "",
-            identificacion: "",
-            correo: "",
-            id_rol: "",
-            contraseña1: "",
-            contraseña2: "",
             usuarioEditar: null,
             finBusquedaUsuarioEditar: false
         }
@@ -37,8 +30,7 @@ class RegisterBoxed extends Component {
 
     _crearUsuario = evento => {
         evento.preventDefault();
-        const { nombres, apellidos, edad, telefono, id_identificacion, identificacion, correo, id_rol, contraseña1, contraseña2 } = this.state;
-        const { lanarErrorRegistroDispatch, lanzarErrorContraseñaDispatch, registrarUsuarioDispatch } = this.props;
+        const { lanarErrorRegistroDispatch, lanzarErrorContraseñaDispatch, registrarUsuarioDispatch, nombres, apellidos, edad, telefono, id_identificacion, identificacion, correo, id_rol, contraseña1, contraseña2 } = this.props;
 
         if (!nombres || !apellidos || !edad || !telefono || !id_identificacion || !identificacion || !correo || !id_rol || !contraseña1 || !contraseña2) {
             lanarErrorRegistroDispatch("Este campo es obligatorio", true);
@@ -61,31 +53,14 @@ class RegisterBoxed extends Component {
     }
 
     _limpiarCampos = () => {
-        const { lanarErrorRegistroDispatch } = this.props;
-        this.setState({
-            nombres: "",
-            apellidos: "",
-            edad: "",
-            telefono: "",
-            id_identificacion: "",
-            identificacion: "",
-            correo: "",
-            id_rol: "",
-            contraseña1: "",
-            contraseña2: "",
-        });
+        const { lanarErrorRegistroDispatch, limpiarFormRegistroDispatch } = this.props;
+        limpiarFormRegistroDispatch();
         lanarErrorRegistroDispatch("", false);
     }
 
     _handleFormRegistro = evento => {
-        
         const name = evento.target.name;
         const value = evento.target.value;
-
-        this.setState({
-            [name]: value
-        });
-
         this.props.handlerRegistroDispatch(name, value);
     }
 
@@ -100,7 +75,8 @@ class RegisterBoxed extends Component {
 
     _editarUsuario = evento => {
         evento.preventDefault();
-        const { nombres, apellidos, edad, telefono, id_identificacion, correo, id_rol, usuarioEditar } = this.state;
+        const { usuarioEditar } = this.state;
+        const { nombres, apellidos, edad, telefono, id_identificacion, correo, id_rol } = this.props;
         const { lanarErrorRegistroDispatch } = this.props;
 
         if (!nombres.trim() || !apellidos.trim() || !edad || !telefono || !id_identificacion || !correo.trim() || !id_rol) {
@@ -125,9 +101,10 @@ class RegisterBoxed extends Component {
         const usuarioEditar = listaUsuarios.filter((user) => user.identificacion === parseInt(identificacion))[0];
         if (usuarioEditar) {
             this.setState({
-                usuarioEditar, finBusquedaUsuarioEditar: true, nombres: usuarioEditar.nombres, apellidos: usuarioEditar.apellidos, edad: usuarioEditar.edad, telefono: usuarioEditar.telefono, id_identificacion: usuarioEditar.tipo_identificacion,
-                identificacion: usuarioEditar.identificacion, correo: usuarioEditar.correo, id_rol: usuarioEditar.id_rol
+                usuarioEditar,
+                finBusquedaUsuarioEditar: true
             });
+            this.props.handlerUsuarioRegistro(usuarioEditar)
         } else {
             this.setState({ usuarioEditar, finBusquedaUsuarioEditar: true });
         }
@@ -138,7 +115,7 @@ class RegisterBoxed extends Component {
     }
 
     componentDidMount = () => {
-        
+
         const { buscarDatosSelectDispatch, datosSelectCargados, match, usuarios, usuariosCargados, agregarUsuariosStateDispatch } = this.props;
 
         if (!datosSelectCargados) {//Si no existen datos para los select (Roles, Identificaciones...) se activa su busqueda en la base de datos
@@ -163,9 +140,10 @@ class RegisterBoxed extends Component {
 
     render() {
 
-        const { registroMensaje, registroError, tiposIdentificacion, tiposRol, datosSelectCargados, errorCargarDatosSelect, errorCampoContraseña, mensajeCampoContraseña, registrandoUsuario, estadoAlertaError, mensajeAlertaError, estadoAlertaSuccess, mensajeAlertaSuccess, handlerAlertaErrorDispatch, match, actualizandoRegistro, estadoAlertaActualizarError, errorActualizarMensaje, mensaje_alerta_success_act, estado_alerta_success_act } = this.props;
+        const { registroMensaje, registroError, tiposIdentificacion, tiposRol, datosSelectCargados, errorCargarDatosSelect, errorCampoContraseña, mensajeCampoContraseña, registrandoUsuario, estadoAlertaError, mensajeAlertaError, estadoAlertaSuccess, mensajeAlertaSuccess, handlerAlertaErrorDispatch, match, actualizandoRegistro, estadoAlertaActualizarError, errorActualizarMensaje, mensaje_alerta_success_act, estado_alerta_success_act,
+            nombres, apellidos, edad, telefono, id_identificacion, identificacion, correo, id_rol, contraseña1, contraseña2, } = this.props;
 
-        const { nombres, apellidos, edad, telefono, id_identificacion, identificacion, correo, id_rol, contraseña1, contraseña2, usuarioEditar, finBusquedaUsuarioEditar } = this.state;
+        const { usuarioEditar, finBusquedaUsuarioEditar } = this.state;
 
         const seEstaEditando = match.path === "/dashboards/editar/:identificacion" ? true : false;
         const disabledInput = actualizandoRegistro || registrandoUsuario ? true : false;
@@ -339,7 +317,7 @@ class RegisterBoxed extends Component {
                                                 <SweetAlert
                                                     title="Oops, ah ocurrido un error!"
                                                     confirmButtonColor=""
-                                                    show={estadoAlertaError || estadoAlertaActualizarError ? true : false}
+                                                    show={(estadoAlertaError || estadoAlertaActualizarError) ? true : false}
                                                     text={estadoAlertaError ? mensajeAlertaError : estadoAlertaActualizarError ? errorActualizarMensaje : ""}
                                                     type="error"
                                                     onConfirm={() => handlerAlertaErrorDispatch("", false)} />
@@ -347,10 +325,11 @@ class RegisterBoxed extends Component {
                                                 <SweetAlert
                                                     title="Proceso exitoso!"
                                                     confirmButtonColor=""
-                                                    show={estadoAlertaSuccess || estado_alerta_success_act ? true : false}
+                                                    show={(estadoAlertaSuccess || estado_alerta_success_act) ? true : false}
                                                     text={estadoAlertaSuccess ? mensajeAlertaSuccess : estado_alerta_success_act ? mensaje_alerta_success_act : ""}
                                                     type="success"
                                                     onConfirm={() => this._editarAlertaSuccess("", false)} />
+
 
                                             </Form>
                                         </div>
@@ -389,6 +368,17 @@ const mapStateToProps = ({ RegistroUsuario, EditarUsuario, Usuarios }) => ({
     errorActualizarMensaje: mensajeActualizarError(EditarUsuario),
     estado_alerta_success_act: alertaActualizarSuccess(EditarUsuario),
     mensaje_alerta_success_act: mensajeActualizarSuccess(EditarUsuario),
+
+    nombres: obtenerNombres(RegistroUsuario),
+    apellidos: obtenerApellidos(RegistroUsuario),
+    edad: obtenerEdad(RegistroUsuario),
+    telefono: obtenerTelefono(RegistroUsuario),
+    id_identificacion: obtenerId_identificacion(RegistroUsuario),
+    identificacion: obtenerIdentificacion(RegistroUsuario),
+    correo: obtenerCorreo(RegistroUsuario),
+    id_rol: obtenerId_rol(RegistroUsuario),
+    contraseña1: obtenerContraseña1(RegistroUsuario),
+    contraseña2: obtenerContraseña2(RegistroUsuario),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -401,7 +391,9 @@ const mapDispatchToProps = dispatch => ({
     buscarUsuariosDispatch: () => dispatch(buscarUsuarios()),
     agregarUsuariosStateDispatch: usuarios => dispatch(agregarUsuariosState(usuarios)),
     actualizarUsuarioDispatch: (identificacion, actualizacion, usuariOriginal) => dispatch(actualizarUsuario(identificacion, actualizacion, usuariOriginal)),
-    handlerRegistroDispatch: (name, value) => dispatch(handlerRegistro(name, value))
+    handlerRegistroDispatch: (name, value) => dispatch(handlerRegistro(name, value)),
+    handlerUsuarioRegistro: usuario => dispatch(handlerUsuarioRegistro(usuario)),
+    limpiarFormRegistroDispatch: () => dispatch(limpiarFormRegistro())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(RegisterBoxed));

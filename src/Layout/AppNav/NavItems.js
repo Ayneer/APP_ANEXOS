@@ -1,16 +1,17 @@
+import { REGISTRAR, USUARIOS, CERRAR_SESION } from "./Rutas";
+
 export const MainNav = [
     {
         icon: 'pe-7s-users',
         label: 'Usuarios',
-        to: "#/dashboards",
         content: [
             {
                 label: 'Registrar',
-                to: '#/dashboards/registrar',
+                to: `${REGISTRAR}`,
             },
             {
                 label: 'Listar',
-                to: '#/dashboards/usuarios',
+                to: `${USUARIOS}`,
             }
 
         ],
@@ -18,12 +19,12 @@ export const MainNav = [
     {
         icon: 'pe-7s-id',
         label: 'Perfil',
-        to: '/#/dashboards/perfil',
+        to: '/dashboards/perfil',
     },
     {
         icon: 'pe-7s-left-arrow',
         label: 'Cerrar sesión',
-        to: '/#/dashboards/salir',
+        to: `${CERRAR_SESION}`,
     },
 ];
 

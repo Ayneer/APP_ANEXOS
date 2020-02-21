@@ -1,4 +1,4 @@
-import { ERROR_REGISTRAR_USUARIO, DATOS_SELECT, ERROR_DATOS_SELECT, ERROR_CAMPO_CONTRASEÑA, USUARIO_REGISTRADO, REGISTRANDO_USUARIO, ALERTA_REGISTRO_ERROR, ALERTA_REGISTRO_SUCCESS, LIMPIAR_STATE_SALIR, LIMPIAR_STATE_REGISTRO, HANDLER_REGISTRO } from '../config/variables';
+import { ERROR_REGISTRAR_USUARIO, DATOS_SELECT, ERROR_DATOS_SELECT, ERROR_CAMPO_CONTRASEÑA, USUARIO_REGISTRADO, REGISTRANDO_USUARIO, ALERTA_REGISTRO_ERROR, ALERTA_REGISTRO_SUCCESS, LIMPIAR_STATE_SALIR, LIMPIAR_STATE_REGISTRO, HANDLER_REGISTRO, HANDLER_USUARIO_REGISTRO, LIMPIAR_FORM_REGISTRO } from '../config/variables';
 
 const initState = {
     registroMensaje: "",
@@ -16,7 +16,16 @@ const initState = {
     estado_alerta_success: false,
     mensaje_alerta_success: "",
 
-    nombres: ""
+    nombres: "",
+    apellidos: "",
+    edad: "",
+    telefono: "",
+    id_identificacion: "",
+    identificacion: "",
+    correo: "",
+    id_rol: "",
+    contraseña1: "",
+    contraseña2: "",
 }
 
 export const RegistroUsuario = (state = initState, action) => {
@@ -38,7 +47,18 @@ export const RegistroUsuario = (state = initState, action) => {
                 estado_alerta_error: false,
                 mensaje_alerta_error: "",
                 estado_alerta_success: false,
-                mensaje_alerta_success: ""
+                mensaje_alerta_success: "",
+
+                nombres: "",
+                apellidos: "",
+                edad: "",
+                telefono: "",
+                id_identificacion: "",
+                identificacion: "",
+                correo: "",
+                id_rol: "",
+                contraseña1: "",
+                contraseña2: "",
             }
 
         case LIMPIAR_STATE_REGISTRO:
@@ -54,15 +74,54 @@ export const RegistroUsuario = (state = initState, action) => {
                 estado_alerta_error: false,
                 mensaje_alerta_error: "",
                 estado_alerta_success: false,
-                mensaje_alerta_success: ""
+                mensaje_alerta_success: "",
+
+                nombres: "",
+                apellidos: "",
+                edad: "",
+                telefono: "",
+                id_identificacion: "",
+                identificacion: "",
+                correo: "",
+                id_rol: "",
+                contraseña1: "",
+                contraseña2: "",
             }
 
         case HANDLER_REGISTRO:
             const name = action.name;
             const value = action.value;
-            return{
+            return {
                 ...state,
                 [name]: value
+            }
+
+        case HANDLER_USUARIO_REGISTRO:
+            return {
+                ...state,
+                nombres: action.usuario.nombres,
+                apellidos: action.usuario.apellidos,
+                edad: action.usuario.edad,
+                telefono: action.usuario.telefono,
+                id_identificacion: action.usuario.tipo_identificacion,
+                identificacion: action.usuario.identificacion,
+                correo: action.usuario.correo,
+                id_rol: action.usuario.id_rol
+            }
+
+        case LIMPIAR_FORM_REGISTRO:
+            return {
+                ...state,
+                nombres: "",
+                apellidos: "",
+                edad: "",
+                telefono: "",
+                id_identificacion: "",
+                identificacion: "",
+                correo: "",
+                id_rol: "",
+                contraseña1: "",
+                contraseña2: "",
             }
 
         case ERROR_REGISTRAR_USUARIO:
@@ -147,4 +206,14 @@ export const obtenerMensajeRegistro = state => state.registroMensaje;
 export const errorEnRegistro = state => state.registroError;
 export const obtenerTiposIdentificacion = state => state.tipos_identificacion;
 export const obtenerTiposRol = state => state.tipos_rol;
+
 export const obtenerNombres = state => state.nombres;
+export const obtenerApellidos = state => state.apellidos;
+export const obtenerEdad = state => state.edad;
+export const obtenerTelefono = state => state.telefono;
+export const obtenerId_identificacion = state => state.id_identificacion;
+export const obtenerIdentificacion = state => state.identificacion;
+export const obtenerCorreo = state => state.correo;
+export const obtenerId_rol = state => state.id_rol;
+export const obtenerContraseña1 = state => state.contraseña1;
+export const obtenerContraseña2 = state => state.contraseña2;

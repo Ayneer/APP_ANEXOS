@@ -3,12 +3,14 @@ import { NavLink, Table, CardHeader, PopoverBody, Row, Col, Button, Nav, NavItem
 import BlockUi from 'react-block-ui';
 import { Loader } from 'react-loaders';
 import SweetAlert from 'sweetalert-react';
+import { NavLink as RRNavLink } from 'react-router-dom';
 
 import ModalUsuario from '../Dashboards/Usuarios/Modal';
 
 import avatar2 from '../../assets/utils/images/avatars/2.jpg';
 import Perfil from './perfil';
 import { withRouter } from 'react-router-dom';
+import { EDITAR_USUARIO } from '../../Layout/AppNav/Rutas';
 
 class TablaComponent extends Component {
 
@@ -63,7 +65,7 @@ class TablaComponent extends Component {
                                 Acciones
                             </NavItem>
                             <NavItem>
-                                <NavLink href={`/#/dashboards/editar/${usuario.identificacion}`}>Editar</NavLink>
+                                <NavLink tag={RRNavLink} exact to={`${EDITAR_USUARIO}${usuario.identificacion}`} >Editar</NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink href="#" onClick={() => accionarMenuFlotante(usuario, !estadoMenu)} >Ver perfil</NavLink>

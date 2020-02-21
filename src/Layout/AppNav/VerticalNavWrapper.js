@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import MetisMenu from 'react-metismenu';
+import CustomLink from './CustomLink';
 
 import { MainNav,/* ComponentsNav, FormsNav, WidgetsNav, ChartsNav*/ } from './NavItems';
 
@@ -8,26 +9,23 @@ class Nav extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { activeLinkTo: '/#' };
+        this.state = { activeLinkTo: '/' };
     }
 
     componentDidMount() {
         this.setState({
-            // activeLinkTo: window.location.hash.replace(/^#/, '')
-            activeLinkTo: window.location.hash
+            activeLinkTo: this.props.history.location.pathname
         });
     }
 
     componentWillReceiveProps() {
         this.setState({
-            // activeLinkTo: window.location.hash.replace(/^#/, '')
-            activeLinkTo: window.location.hash
+            activeLinkTo: this.props.history.location.pathname
         });
     }
 
 
     render() {  
-
         return (
             <Fragment>
                 <h5 className="app-sidebar__heading">Menu</h5>
@@ -35,6 +33,7 @@ class Nav extends Component {
                     content={MainNav}
                     // activeLinkFromLocation
                     activeLinkTo={this.state.activeLinkTo}
+                    LinkComponent={CustomLink}
                     className="vertical-nav-menu"
                     iconNamePrefix=""
                     classNameStateIcon="pe-7s-angle-down"

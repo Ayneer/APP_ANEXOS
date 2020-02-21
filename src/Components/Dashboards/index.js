@@ -12,18 +12,30 @@ import { connect } from 'react-redux';
 // DASHBOARDS
 import UsuariosDashboard from './Usuarios';
 import Registro from '../Registro';
-import { limpiarRegistro } from '../../Actions/Registro';
 
 class Dashboards extends Component {
 
+    constructor(props){
+        super(props);
+
+        this.state = {
+            prevPath: ""
+        }
+    }
+
     _cerrarSesion = () => {
-        const {cerrarSesionDispatch} = this.props;
+        const { cerrarSesionDispatch } = this.props;
         cerrarSesionDispatch();
     }
 
     _abrirNuevoRegistro = () => {
-        this.props.limpiarRegistro();
         return <Registro />;
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.location !== this.props.location) {
+            this.setState({ prevPath: this.props.location })
+        }
     }
 
     render() {
@@ -39,7 +51,7 @@ class Dashboards extends Component {
                         <div className="app-main__inner">
                             <Switch>{/* Rutas Body */}
                                 <Route exact path={`${match.url}/usuarios`} component={UsuariosDashboard} />
-                                <Route exact path={`${match.url}/registrar`} render={()=> this._abrirNuevoRegistro()} />
+                                <Route exact path={`${match.url}/registrar`} render={() => this._abrirNuevoRegistro()} />
                                 <Route exact path={`${match.url}/editar/:identificacion`} component={Registro} />
 
                                 <Route exact path={`${match.url}/salir`} render={() => this._cerrarSesion()} />
@@ -56,9 +68,8 @@ class Dashboards extends Component {
 };
 
 const mapStateoProps = state => ({});
-const mapDispatchToPros = dispatch => ({ 
-    cerrarSesionDispatch: () => dispatch(cerrarSesion()),
-    limpiarRegistro: () => dispatch(limpiarRegistro())
+const mapDispatchToPros = dispatch => ({
+    cerrarSesionDispatch: () => dispatch(cerrarSesion())
 });
 
 export default connect(mapStateoProps, mapDispatchToPros)(Dashboards);
