@@ -2,6 +2,12 @@ import { URL } from '../config/conexionServer';
 import Autenticacion from '../Autenticacion';
 const Api = {};
 
+
+const variableDuplicada = error => {
+    let variableDuplicada = error.split('key:')[1];
+    return `Error ya existe un usuario con el parametro ${variableDuplicada}`;
+}
+
 Api.iniciarSesion = async (correo, contraseña) => {
 
     let respuesta = {
@@ -81,7 +87,7 @@ Api.obtenerUsuario = async () => {
     return respuesta;
 }
 
-Api.crearUsuario = async (usuario) => {
+Api.crearUsuario = async (datosEmpresa, datosUsuario, datosAutenticacion) => {
     let respuesta = {
         mensaje: "",
         error: null,
@@ -89,9 +95,9 @@ Api.crearUsuario = async (usuario) => {
     };
 
     try {
-        const resultado = await fetch(URL + '/usuario', {
+        const resultado = await fetch(URL + '/ips_eps', {
             method: 'POST',
-            body: JSON.stringify(usuario),
+            body: JSON.stringify({datosEmpresa, datosUsuario, datosAutenticacion}),
             headers: {
                 'Authorization': 'Bearer ' + Autenticacion.obtenerToken().Token,
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -117,7 +123,11 @@ Api.crearUsuario = async (usuario) => {
 
         } else {
             respuesta.error = false;
-            respuesta.usuario = resultadoJson.usuarioCompleto;
+            respuesta.usuario = {
+                dataAuth: resultadoJson.dataAuth,
+                dataUsuario: resultadoJson.dataUsuario,
+                dataEmpresa: resultadoJson.dataEmpresa,
+            };
         }
     } catch (error) {
         console.log(error)
@@ -128,7 +138,8 @@ Api.crearUsuario = async (usuario) => {
     return respuesta;
 }
 
-Api.actualizarUsuario = async (identificacion, actualizacion, usuariOriginal) => {
+Api.actualizarUsuario = async (actualizacionEmpresa, actualizacionUsuario, actualizacionAutenticacion, _idEmpresa, _idUsuario, _idAutenticacion) => {
+    
     let respuesta = {
         mensaje: "",
         error: null,
@@ -136,9 +147,9 @@ Api.actualizarUsuario = async (identificacion, actualizacion, usuariOriginal) =>
     };
 
     try {
-        const resultado = await fetch(URL + '/usuario/', {
+        const resultado = await fetch(URL + '/ips_eps', {
             method: 'PUT',
-            body: JSON.stringify({identificacion, actualizacion, usuariOriginal}),
+            body: JSON.stringify({actualizacionEmpresa, actualizacionUsuario, actualizacionAutenticacion, _idEmpresa, _idUsuario, _idAutenticacion}),
             headers: {
                 'Authorization': 'Bearer ' + Autenticacion.obtenerToken().Token,
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -147,10 +158,12 @@ Api.actualizarUsuario = async (identificacion, actualizacion, usuariOriginal) =>
         });
 
         const resultadoJson = await resultado.json();
-        
+        console.log(resultadoJson)
         if (resultadoJson.error) {
             respuesta.error = true;
-            if (resultadoJson.mensajeError) {
+            if(resultadoJson.codigoError === 11000){
+                respuesta.mensaje = variableDuplicada(resultadoJson.mensajeError);
+            }else if (resultadoJson.mensajeError) {
                 respuesta.mensaje = resultadoJson.mensajeError;
             } else if(resultadoJson.status){
                 respuesta.mensaje = resultadoJson.status;
@@ -160,7 +173,11 @@ Api.actualizarUsuario = async (identificacion, actualizacion, usuariOriginal) =>
 
         } else {
             respuesta.error = false;
-            respuesta.usuario = resultadoJson.usuarioActualizado;
+            respuesta.usuario = {
+                dataAuth: resultadoJson.dataAuth,
+                dataUsuario: resultadoJson.dataUsuario,
+                dataEmpresa: resultadoJson.dataEmpresa,
+            };
         }
     } catch (error) {
         console.log(error)
@@ -171,7 +188,7 @@ Api.actualizarUsuario = async (identificacion, actualizacion, usuariOriginal) =>
     return respuesta;
 }
 
-Api.eliminarUsuario = async (identificacion) => {
+Api.eliminarUsuario = async (nit) => {
     let respuesta = {
         mensaje: "",
         error: null,
@@ -179,7 +196,7 @@ Api.eliminarUsuario = async (identificacion) => {
     };
 
     try {
-        const resultado = await fetch(URL + '/usuario/' + identificacion, {
+        const resultado = await fetch(URL + '/ips_eps/' + nit, {
             method: 'DELETE',
             headers: {
                 'Authorization': 'Bearer ' + Autenticacion.obtenerToken().Token,
@@ -213,7 +230,8 @@ Api.eliminarUsuario = async (identificacion) => {
     return respuesta;
 }
 
-Api.listarUsuarios = async () => {
+Api.listarUsuarios = async (id_empresa) => {
+
     let respuesta = {
         mensaje: "",
         error: null,
@@ -222,7 +240,7 @@ Api.listarUsuarios = async () => {
     };
 
     try {
-        const resultado = await fetch(URL + '/usuariosCompleto', {
+        const resultado = await fetch(URL + '/eps/' + id_empresa, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + Autenticacion.obtenerToken().Token,
@@ -243,7 +261,7 @@ Api.listarUsuarios = async () => {
 
         } else {
             respuesta.error = false;
-            respuesta.usuarios = resultadoJson.data;
+            respuesta.usuarios = resultadoJson.listadoEps;
         }
     } catch (error) {
         console.log(error)

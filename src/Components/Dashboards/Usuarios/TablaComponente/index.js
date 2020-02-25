@@ -1,16 +1,16 @@
 import React, { Component, Fragment } from 'react';
-import { NavLink, Table, CardHeader, PopoverBody, Row, Col, Button, Nav, NavItem, Card, UncontrolledPopover, CardFooter} from 'reactstrap';
+import { NavLink, Table, CardHeader, PopoverBody, Row, Col, Button, Nav, NavItem, Card, UncontrolledPopover, CardFooter } from 'reactstrap';
 import BlockUi from 'react-block-ui';
 import { Loader } from 'react-loaders';
 import SweetAlert from 'sweetalert-react';
 import { NavLink as RRNavLink } from 'react-router-dom';
 
-import ModalUsuario from '../Dashboards/Usuarios/Modal';
+import ModalUsuario from '../Modal';
 
-import avatar2 from '../../assets/utils/images/avatars/2.jpg';
+import avatar2 from '../../../../assets/utils/images/avatars/2.jpg';
 import Perfil from './perfil';
 import { withRouter } from 'react-router-dom';
-import { EDITAR_USUARIO } from '../../Layout/AppNav/Rutas';
+import { EDITAR_EPS } from '../../../../Layout/AppNav/Rutas';
 
 class TablaComponent extends Component {
 
@@ -21,7 +21,8 @@ class TablaComponent extends Component {
             mostrarAlerta: true,
             modalEstado: false,
             asegurarAccion: false,
-            identificacion_usuario: null
+            identificacion_usuario: null,
+            nit_empresa: null
         }
 
         this._toggleModal = this._toggleModal.bind(this);
@@ -38,11 +39,12 @@ class TablaComponent extends Component {
     }
 
     _eliminarDato = () => {
-        this.props.eliminarDato(this.state.identificacion_usuario);
+        const { identificacion_usuario, nit_empresa } = this.state;
+        this.props.eliminarDato(nit_empresa, identificacion_usuario);
     }
 
     _cancelarEliminacion = () => {
-        this.setState({ asegurarAccion: false, identificacion_usuario: null });
+        this.setState({ asegurarAccion: false, identificacion_usuario: null, nit_empresa: null });
     }
 
     optMenu = (usuario) => {
@@ -51,27 +53,28 @@ class TablaComponent extends Component {
 
         return (
             <Fragment>
-                <Button size="sm" className="btn-pill" color="link" id={`PopoverCustomT-${usuario.identificacion}`}>
+                <Button size="sm" className="btn-pill" color="link" id={`PopoverCustomT-${usuario.dataUsuario.identificacion}`}>
                     <span className="pe-7s-more" ></span>
                 </Button>
                 <UncontrolledPopover
+                    flip={false}
                     trigger="legacy"
                     placement="top"
                     className="popover-custom rm-pointers"
-                    target={`PopoverCustomT-${usuario.identificacion}`}>
+                    target={`PopoverCustomT-${usuario.dataUsuario.identificacion}`}>
                     <PopoverBody>
                         <Nav vertical>
                             <NavItem className="nav-item-header">
                                 Acciones
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={RRNavLink} exact to={`${EDITAR_USUARIO}${usuario.identificacion}`} >Editar</NavLink>
+                                <NavLink tag={RRNavLink} exact to={`${EDITAR_EPS}${usuario.dataUsuario.identificacion}`} >Editar</NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink href="#" onClick={() => accionarMenuFlotante(usuario, !estadoMenu)} >Ver perfil</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink href="#" onClick={() => this.setState({ asegurarAccion: true, identificacion_usuario: usuario.identificacion })}>Eliminar</NavLink>
+                                <NavLink href="#" onClick={() => this.setState({ asegurarAccion: true, identificacion_usuario: usuario.dataUsuario.identificacion, nit_empresa: usuario.dataEmpresa.nit })}>Eliminar</NavLink>
                             </NavItem>
                             {/* <NavItem>
                                 <NavLink href="#">Recuperar contraseña</NavLink>
@@ -97,7 +100,7 @@ class TablaComponent extends Component {
 
         let { cargandoDatos, datos, error, mensajeError, eliminandoDato, errorEliminarDato, eliminarMensajeError, datoEliminado, mensajeExitoEliminar } = this.props;
         let { mostrarAlerta, modalEstado, asegurarAccion } = this.state;
-
+        
         return (
             <Row>
                 <Col md="12">
@@ -106,7 +109,7 @@ class TablaComponent extends Component {
                         <ModalUsuario modalEstado={modalEstado} toggle={this._toggleModal} />
 
                         <CardHeader>
-                            Usuarios activos
+                            EPS activas
                         </CardHeader>
 
                         <BlockUi tag="div" blocking={cargandoDatos} className="block-overlay-dark"
@@ -141,28 +144,26 @@ class TablaComponent extends Component {
                                         </thead>
                                         <tbody>
                                             {datos.length > 0 && datos.map((usuario, index) =>
-                                                <tr key={usuario.identificacion}>
+                                                <tr key={usuario.dataUsuario.identificacion}>
                                                     <td className="text-center text-muted">{`#${index + 1}`}</td>
 
                                                     <td>
-                                                        <Perfil nombre={usuario.nombres} descripcion={usuario.tipo_perfil} avatar={avatar2} />
+                                                        <Perfil nombre={usuario.dataUsuario.nombres} descripcion={usuario.dataEmpresa.nombre} avatar={avatar2} />
                                                     </td>
 
                                                     <td className="text-center">
-                                                        {usuario.identificacion}
+                                                        {usuario.dataUsuario.identificacion}
                                                     </td>
 
                                                     <td className="text-center">
-                                                        <div className="badge badge-warning">{usuario.correo}</div>
+                                                        <div className="badge badge-warning">{usuario.dataAuth.correo}</div>
                                                     </td>
 
                                                     <td className="text-center">
                                                         {this.optMenu(usuario)}
                                                     </td>
                                                 </tr>
-
                                             )}
-
                                         </tbody>
                                     </Table>
 

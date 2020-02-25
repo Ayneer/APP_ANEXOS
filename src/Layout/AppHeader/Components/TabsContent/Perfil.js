@@ -30,8 +30,8 @@ class Perfil extends Component {
                                         </div>
                                     </div>
                                     <div>
-                                        <h5 className="menu-header-title">{usuario.nombres + " " + usuario.apellidos}</h5>
-                                        <h6 className="menu-header-subtitle">{`Nombre de la empresa`}</h6>
+                                        <h5 className="menu-header-title">{usuario.dataUsuario.nombres + " " + usuario.dataUsuario.apellidos}</h5>
+                                        <h6 className="menu-header-subtitle">{usuario.dataEmpresa.nombre}</h6>
                                     </div>
                                     <div className="menu-header-btn-pane">
                                     </div>
@@ -44,26 +44,26 @@ class Perfil extends Component {
                                     <div className="widget-content-wrapper">
                                         <div className="widget-content-left">
                                             <div className="widget-heading text-dark opacity-7">
-                                                {`Rol de ${usuario.tipo_perfil}`}
+                                                {`Rol de ${usuario.dataAuth.tipo_perfil}`}
                                             </div>
                                             <div className="widget-subheading opacity-10">
                                                 <span className="pr-2">
-                                                    {`${usuario.descripcionTipoIdentificacion} (${usuario.acronimo}):`} <b className="text-danger">{usuario.identificacion}</b>
+                                                    {`${usuario.dataUsuario.descripcion} (${usuario.dataUsuario.acronimo}):`} <b className="text-danger">{usuario.dataUsuario.identificacion}</b>
                                                 </span>
                                             </div>
                                             <div className="widget-subheading opacity-10">
                                                 <span className="pr-2">
-                                                    Edad: <b className="text-danger">{usuario.edad}</b>
+                                                    Edad: <b className="text-danger">{usuario.dataUsuario.edad}</b>
                                                 </span>
                                             </div>
                                             <div className="widget-subheading opacity-10">
                                                 <span className="pr-2">
-                                                    Correo electrónico: <b className="text-danger">{usuario.correo}</b>
+                                                    Correo electrónico: <b className="text-danger">{usuario.dataAuth.correo}</b>
                                                 </span>
                                             </div>
                                             <div className="widget-subheading opacity-10">
                                                 <span className="pr-2">
-                                                    Teléfono: <b className="text-danger">{usuario.telefono}</b>
+                                                    Teléfono: <b className="text-danger">{usuario.dataUsuario.telefono}</b>
                                                 </span>
                                             </div>
                                         </div>

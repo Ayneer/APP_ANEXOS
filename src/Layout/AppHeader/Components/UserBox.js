@@ -73,10 +73,10 @@ class UserBox extends React.Component {
                                                             </div>
                                                             <div className="widget-content-left">
                                                                 <div className="widget-heading">
-                                                                    {usuario.nombres}
+                                                                    {usuario.dataUsuario.nombres}
                                                                 </div>
                                                                 <div className="widget-subheading opacity-8">
-                                                                    {`${usuario.tipo_perfil}`}
+                                                                    {`${usuario.dataAuth.tipo_perfil}`}
                                                                 </div>
                                                             </div>
                                                             <div className="widget-content-right mr-2">
@@ -122,10 +122,10 @@ class UserBox extends React.Component {
                             </div>
                             <div className="widget-content-left  ml-3 header-user-info">
                                 <div className="widget-heading">
-                                    {usuario.nombres}
+                                    {usuario.dataUsuario.nombres}
                                 </div>
                                 <div className="widget-subheading">
-                                    {`${usuario.tipo_perfil}`}
+                                    {`${usuario.dataAuth.tipo_perfil}`}
                                 </div>
                             </div>
                         </div>

@@ -6,9 +6,9 @@ export const cargarUsuarios = (usuarios) => {
     }
 }
 
-export const buscarUsuarios = () => {
+export const buscarUsuarios = (id_empresa) => {
     return (dispatch,  getState, Api) => {
-        Api.listarUsuarios().then((resultado) => {
+        Api.listarUsuarios(id_empresa).then((resultado) => {
             
             if(resultado.error){
                 dispatch({ type: ERROR_CARGAR_USUARIOS, estado: true, mensaje: resultado.mensaje });
@@ -28,11 +28,11 @@ export const eliminandoUsuario = (estado) => {
     }
 }
 
-export const eliminarUsuario = (identificacion) => {
+export const eliminarUsuario = (nit, identificacion) => {
     return (dispatch,  getState, Api) => {
         dispatch({ type: ELIMINANDO_USUARIO, estado: true });
         
-        Api.eliminarUsuario(identificacion).then((resultado) => {
+        Api.eliminarUsuario(nit).then((resultado) => {
             console.log(resultado)
             if(resultado.error){
                 dispatch({ type: ELIMINANDO_USUARIO, estado: false });
@@ -40,6 +40,7 @@ export const eliminarUsuario = (identificacion) => {
             }else{
                 dispatch({ type: ELIMINANDO_USUARIO, estado: false });
                 dispatch({ type: USUARIO_ELIMINADO, usuarios: resultado.usuarios, estado: true, mensaje: "Usuario eliminado con éxito!" });
+                console.log(identificacion)
                 dispatch({ type: ELIMINAR_USUARIO, identificacion });
             }
             

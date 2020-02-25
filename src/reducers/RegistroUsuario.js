@@ -1,4 +1,4 @@
-import { ERROR_REGISTRAR_USUARIO, DATOS_SELECT, ERROR_DATOS_SELECT, ERROR_CAMPO_CONTRASEÑA, USUARIO_REGISTRADO, REGISTRANDO_USUARIO, ALERTA_REGISTRO_ERROR, ALERTA_REGISTRO_SUCCESS, LIMPIAR_STATE_SALIR, LIMPIAR_STATE_REGISTRO, HANDLER_REGISTRO, HANDLER_USUARIO_REGISTRO, LIMPIAR_FORM_REGISTRO } from '../config/variables';
+import { ERROR_REGISTRAR_USUARIO, DATOS_SELECT, ERROR_DATOS_SELECT, ERROR_CAMPO_CONTRASEÑA, USUARIO_REGISTRADO, REGISTRANDO_USUARIO, ALERTA_REGISTRO_ERROR, ALERTA_REGISTRO_SUCCESS, LIMPIAR_STATE_SALIR, LIMPIAR_STATE_REGISTRO, HANDLER_REGISTRO, HANDLER_USUARIO_REGISTRO, LIMPIAR_FORM_REGISTRO, HANDLER_ID_ROL } from '../config/variables';
 
 const initState = {
     registroMensaje: "",
@@ -26,6 +26,8 @@ const initState = {
     id_rol: "",
     contraseña1: "",
     contraseña2: "",
+    nombreEmpresa: "",
+    nitEmpresa: "",
 }
 
 export const RegistroUsuario = (state = initState, action) => {
@@ -59,6 +61,8 @@ export const RegistroUsuario = (state = initState, action) => {
                 id_rol: "",
                 contraseña1: "",
                 contraseña2: "",
+                nombreEmpresa: "",
+                nitEmpresa: "",
             }
 
         case LIMPIAR_STATE_REGISTRO:
@@ -86,6 +90,8 @@ export const RegistroUsuario = (state = initState, action) => {
                 id_rol: "",
                 contraseña1: "",
                 contraseña2: "",
+                nombreEmpresa: "",
+                nitEmpresa: "",
             }
 
         case HANDLER_REGISTRO:
@@ -95,18 +101,27 @@ export const RegistroUsuario = (state = initState, action) => {
                 ...state,
                 [name]: value
             }
-
-        case HANDLER_USUARIO_REGISTRO:
+    
+        case HANDLER_ID_ROL:
             return {
                 ...state,
-                nombres: action.usuario.nombres,
-                apellidos: action.usuario.apellidos,
-                edad: action.usuario.edad,
-                telefono: action.usuario.telefono,
-                id_identificacion: action.usuario.tipo_identificacion,
-                identificacion: action.usuario.identificacion,
-                correo: action.usuario.correo,
-                id_rol: action.usuario.id_rol
+                id_rol: action.id_rol
+            }
+
+        case HANDLER_USUARIO_REGISTRO:
+            
+            return {
+                ...state,
+                nombres: action.usuario.dataUsuario.nombres,
+                apellidos: action.usuario.dataUsuario.apellidos,
+                edad: action.usuario.dataUsuario.edad,
+                telefono: action.usuario.dataUsuario.telefono,
+                id_identificacion: action.usuario.dataUsuario.tipo_identificacion,
+                identificacion: action.usuario.dataUsuario.identificacion,
+                correo: action.usuario.dataAuth.correo,
+                id_rol: action.usuario.dataAuth.id_rol,
+                nombreEmpresa: action.usuario.dataEmpresa.nombre,
+                nitEmpresa: action.usuario.dataEmpresa.nit,
             }
 
         case LIMPIAR_FORM_REGISTRO:
@@ -122,6 +137,8 @@ export const RegistroUsuario = (state = initState, action) => {
                 id_rol: "",
                 contraseña1: "",
                 contraseña2: "",
+                nombreEmpresa: "",
+                nitEmpresa: "",
             }
 
         case ERROR_REGISTRAR_USUARIO:
@@ -134,10 +151,18 @@ export const RegistroUsuario = (state = initState, action) => {
             }
 
         case DATOS_SELECT:
+            
+            let roles_permitidos = [];
+            if(action.id_rol_padre === 4){//Si el usuario logueado es un IPS_ADMIN
+                roles_permitidos = action.tipos_rol.filter((rol) => rol.id_rol === 4 || rol.id_rol === 2 );
+            }else if(action.id_rol_padre === 2){//Si el usuario logueado es un EPS_ADMIN
+                roles_permitidos = action.tipos_rol.filter((rol) => rol.id_rol === 3);
+            }
+            
             return {
                 ...state,
                 tipos_identificacion: action.tipos_identificacion,
-                tipos_rol: action.tipos_rol,
+                tipos_rol: roles_permitidos,
                 datos_select_cargados: action.estado,
                 error_cargar_datos_select: false
             }
@@ -217,3 +242,5 @@ export const obtenerCorreo = state => state.correo;
 export const obtenerId_rol = state => state.id_rol;
 export const obtenerContraseña1 = state => state.contraseña1;
 export const obtenerContraseña2 = state => state.contraseña2;
+export const obtenerNombreEmpresa = state => state.nombreEmpresa;
+export const obtenerNombreNitEmpresa = state => state.nitEmpresa;

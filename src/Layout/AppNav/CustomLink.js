@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import { REGISTRAR } from './Rutas';
+import { REGISTRAR_EPS, REGISTRAR_USUARIOS } from './Rutas';
 import { /*useSelector,*/ useDispatch } from 'react-redux';
 // import { obtenerUsuarioAutenticado } from '../../reducers/Autenticacion';
-import { limpiarFormRegistro } from '../../Actions/Registro';
+import { limpiarFormRegistro, /*handlerId_rol*/ } from '../../Actions/Registro';
 
 const DefaultLink = ({
     className,
@@ -30,8 +30,10 @@ const DefaultLink = ({
     }
 
     const _activateMe = (e) => {
-        if(to === REGISTRAR){
+        if(to === REGISTRAR_EPS || to === REGISTRAR_USUARIOS){
+            // let id_rol = to === REGISTRAR_EPS ?
             dispatch( limpiarFormRegistro() )
+            // dispatch( handlerId_rol() )
         }
         activateMe(e);
     }

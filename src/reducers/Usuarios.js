@@ -61,7 +61,7 @@ export const Usuarios = (state = initState, action) => {
             }
 
         case ELIMINAR_USUARIO:
-            let usuarios = state.usuarios.filter((user) => user.identificacion !== action.identificacion);
+            let usuarios = state.usuarios.filter((user) => user.dataUsuario.identificacion !== action.identificacion);
             return {
                 ...state,
                 usuarios
@@ -79,9 +79,10 @@ export const Usuarios = (state = initState, action) => {
         case ACTUALIZAR_USUARIO: {
             let usuario = action.usuario;
             let usuarios = state.usuarios;
+            let usuarioOriginal = action.usuarioOriginal;
             for (let index = 0; index < usuarios.length; index++) {
-                let {identificacion} = usuarios[index];
-                if(identificacion === usuario.identificacion){
+                let {identificacion} = usuarios[index].dataUsuario;
+                if(identificacion === usuarioOriginal.dataUsuario.identificacion){
                     usuarios[index] = usuario;
                     break;
                 }

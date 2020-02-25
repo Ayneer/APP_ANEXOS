@@ -7,7 +7,6 @@ const Dashboards = lazy(() => import('../Components/Dashboards'));
 const Login = lazy(() => import('../Components/LoginBoxed'));
 
 const redireccionar = (component) => {
-    // window.history.replaceState(null, null, "/");
     window.history.replaceState(null, null, "/");
     return <Redirect to={`${component}`} />
 }
@@ -33,8 +32,8 @@ const AppMain = ({usuario}) => {
             }>
                 {sesion ? 
                     <Switch>
-                        <Route path="/dashboards" component={Dashboards}/>    
-                        <Route path="/" render={() => redireccionar("/dashboards")} />
+                        <Route path="/app" component={Dashboards}/>    
+                        <Route path="/" render={() => redireccionar("/app")} />
                     </Switch>
                     :
                     <Switch>

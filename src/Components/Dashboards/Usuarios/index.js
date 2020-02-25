@@ -3,7 +3,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { Container } from 'reactstrap';
 
 import PageTitle from '../../../Layout/PageTitle';
-import TablaContainer from '../../TablaComponente';
+import TablaContainer from './TablaComponente';
 import { connect } from 'react-redux';
 import { buscarUsuarios, eliminarUsuario, alertaUsuarioNoEliminado, alertaUsuarioEliminado } from '../../../Actions/Usuarios';
 import { accionarMenuFlotante } from '../../../Actions/MenuFlotante';
@@ -14,14 +14,14 @@ import { estadoMenu } from '../../../reducers/MenuFlotante';
 class UsuariosDashboard extends Component {
 
     componentDidMount() {
-        let { buscarUsuariosDispatch, usuariosCargados } = this.props;
+        let { buscarUsuariosDispatch, usuariosCargados, usuario } = this.props;
         if (!usuariosCargados) {
-            buscarUsuariosDispatch();
+            buscarUsuariosDispatch(usuario.dataEmpresa._id);
         }
     }
 
-    _eliminarUsuarioSistema = (identificacion) => {
-        this.props.eliminarUsuarioDispatch(identificacion);
+    _eliminarUsuarioSistema = (nit, identificacion) => {
+        this.props.eliminarUsuarioDispatch(nit, identificacion);
     }
 
     _alertaUsuarioNoEliminado = (mensaje, estado) => {
@@ -39,9 +39,7 @@ class UsuariosDashboard extends Component {
 
     render() {
 
-        let { usuarios, cargandoUsuarios, errorCargarUsuario, mensajeError, usuario, eliminandoUsuario, errorEliminarUsuario, eliminarMensajeError, usuarioEliminado, mensajeExitoEliminar, accionarMenu } = this.props;
-
-        usuarios = usuarios.filter((user) => user.identificacion !== usuario.identificacion);
+        let { usuarios, cargandoUsuarios, errorCargarUsuario, mensajeError, eliminandoUsuario, errorEliminarUsuario, eliminarMensajeError, usuarioEliminado, mensajeExitoEliminar, accionarMenu } = this.props;
 
         return (
             <Fragment>
@@ -53,8 +51,8 @@ class UsuariosDashboard extends Component {
                     transitionEnter={false}
                     transitionLeave={false}>
                     <PageTitle
-                        heading="Mis usuarios"
-                        subheading="Gestión de usuarios registrados en la aplicación."
+                        heading="Listado de EPS"
+                        subheading="Gestión de EPS registradas en mi IPS."
                         icon="pe-7s-users icon-gradient bg-ripe-malin"
                     />
                     <Fragment>
@@ -98,8 +96,8 @@ const mapStateToProps = ({Usuarios, Autenticacion, MenuFlotante}) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    buscarUsuariosDispatch: () => dispatch(buscarUsuarios()),
-    eliminarUsuarioDispatch: identificacion => dispatch(eliminarUsuario(identificacion)),
+    buscarUsuariosDispatch: (id_empresa) => dispatch(buscarUsuarios(id_empresa)),
+    eliminarUsuarioDispatch: (nit, identificacion) => dispatch(eliminarUsuario(nit, identificacion)),
     alertaUsuarioNoEliminadoDispatch: (mensaje, estado) => dispatch(alertaUsuarioNoEliminado(mensaje, estado)),
     alertaUsuarioEliminadoDispatch: (mensaje, estado) => dispatch(alertaUsuarioEliminado(mensaje, estado)),
     accionarMenuFlotanteDispatch: (usuario, estado) => dispatch(accionarMenuFlotante(usuario, estado)),
