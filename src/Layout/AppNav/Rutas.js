@@ -5,4 +5,4 @@ export const EPS = '/app/eps/listar';
 export const EDITAR_USUARIO = '/app/usuarios/editar/';
 export const EDITAR_EPS = '/app/eps/editar/';
 export const CERRAR_SESION = '/dashboards/salir';
-export const INICIO = '/dashboards/perfil';
+export const INICIO = '/app/perfil';

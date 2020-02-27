@@ -1,9 +1,10 @@
-import { CARGAR_USUARIO_SESION, ERROR_INICIAR_SESION, CARGANDO_SESION, RECUPERANDO_SESION, LIMPIAR_STATE_SALIR } from '../config/variables';
+import { CARGAR_USUARIO_SESION, ERROR_INICIAR_SESION, CARGANDO_SESION, RECUPERANDO_SESION, LIMPIAR_STATE_SALIR, CARGAR_DATOS_EMPRESA_AUTENTICADA } from '../config/variables';
 import Autenticacion from '../Autenticacion';
 
 export const cargarUsuario = (usuario) => {
     return (dispatch, getState, Api) => {
         dispatch({ type: CARGAR_USUARIO_SESION, usuario });
+        dispatch({ type: CARGAR_DATOS_EMPRESA_AUTENTICADA, usuario });
     }
 }
 
@@ -19,6 +20,7 @@ export const iniciarSesion = (correo, contraseña) => {
             } else {//Sesion con exito
                 Autenticacion.guardarToken(respuesta.token);
                 dispatch({ type: CARGAR_USUARIO_SESION, usuario: respuesta.usuario });
+                dispatch({ type: CARGAR_DATOS_EMPRESA_AUTENTICADA, usuario: respuesta.usuario });
                 dispatch({ type: CARGANDO_SESION, estado: false });
                 dispatch({ type: ERROR_INICIAR_SESION, estado: false, mensaje: null });
             }
@@ -43,7 +45,7 @@ export const cerrarSesion = () => {
     }
 }
 
-export const obtenerUsuario = () => {
+export const obtenerUsuario = () => {//Cargar usuario en el sistema
     return (dispatch, getState, Api) => {
 
         dispatch({ type: RECUPERANDO_SESION, estado: true });
@@ -55,6 +57,7 @@ export const obtenerUsuario = () => {
                 dispatch({ type: RECUPERANDO_SESION, estado: false });
             } else {//Sesion recuperada con exito
                 dispatch({ type: CARGAR_USUARIO_SESION, usuario: respuesta.usuario });
+                dispatch({ type: CARGAR_DATOS_EMPRESA_AUTENTICADA, usuario: respuesta.usuario });
                 dispatch({ type: RECUPERANDO_SESION, estado: false });
             }
 

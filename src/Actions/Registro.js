@@ -52,6 +52,7 @@ export const registrarUsuario = (datosEmpresa, datosUsuario, datosAutenticacion)
     }
 }
 
+//shift+f12
 export const actualizarUsuario = (actualizacionEmpresa, actualizacionUsuario, actualizacionAutenticacion, _idEmpresa, _idUsuario, _idAutenticacion, usuarioOriginal) => {
     return (dispatch, getState, Api) => {
         dispatch({ type: ACTUALIZANDO_USUARIO, estado: true });

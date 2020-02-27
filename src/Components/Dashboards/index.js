@@ -10,9 +10,10 @@ import { cerrarSesion } from '../../Actions/Autenticacion';
 import { connect } from 'react-redux';
 
 // DASHBOARDS
-import UsuariosDashboard from './Usuarios';
-import Registro from './Usuarios/Registro';
-import { REGISTRAR_EPS, EDITAR_EPS, EPS} from '../../Layout/AppNav/Rutas';
+import Perfil from './Perfil/index';
+import EPSListado from './EPS';
+import Registro from './EPS/Registro';
+import { REGISTRAR_EPS, EDITAR_EPS, EPS, INICIO} from '../../Layout/AppNav/Rutas';
 
 class Dashboards extends Component {
 
@@ -47,12 +48,13 @@ class Dashboards extends Component {
                     <div className="app-main__outer"> {/* Body Inicio */}
                         <div className="app-main__inner">
                             <Switch>{/* Rutas Body */}
-                                <Route exact path={EPS} component={UsuariosDashboard} />
+                                <Route exact path={INICIO} component={Perfil} />
+                                <Route exact path={EPS} component={EPSListado} />
                                 <Route exact path={REGISTRAR_EPS} component={Registro} />
                                 <Route exact path={`${EDITAR_EPS}:identificacion`} component={Registro} />
 
                                 <Route exact path={`${match.url}/salir`} render={() => this._cerrarSesion()} />
-                                <Route path="/" render={() => <Redirect to={EPS} />} />
+                                <Route path="/" render={() => <Redirect to={INICIO} />} />
                             </Switch>
                         </div>{/* Body Fin */}
                         {/* <AppFooter /> Footer */}

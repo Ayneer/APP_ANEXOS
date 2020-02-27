@@ -186,7 +186,8 @@ const FormularioRegistroEPS = ({
                             className="btn-wide btn-pill btn-shadow btn-hover-shine"
                             onClick={seEstaEditando ? _goListaUsuarios : _limpiarCampos}
                             disabled={disabledInput}>
-                            {seEstaEditando ? "Volver" : "Limpiar"}
+                            {/* <i className="lnr-apartment btn-icon-wrapper" /> */}
+                            {seEstaEditando ? " Volver" : " Limpiar"}
                         </Button>
                     </div>
                 </Col>
