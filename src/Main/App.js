@@ -8,6 +8,7 @@ import AppMain from '../Layout';
 import { cargarUsuario, obtenerUsuario, volerLogin } from '../Actions/Autenticacion';
 import Autenticacion from '../Autenticacion';
 import { obtenerUsuarioAutenticado, estaCargandoSesion } from '../reducers/Autenticacion';
+import { estanCargadoDatosSistema } from '../reducers/Sistema';
 
 class App extends Component {
 
@@ -25,8 +26,8 @@ class App extends Component {
 
   render() {
 
-    let { colorScheme, enableFixedHeader, enableFixedSidebar, enableFixedFooter, enableClosedSidebar, closedSmallerSidebar, enableMobileMenu, enablePageTabsAlt, usuario,} = this.props;
-
+    let { colorScheme, enableFixedHeader, enableFixedSidebar, enableFixedFooter, enableClosedSidebar, closedSmallerSidebar, enableMobileMenu, enablePageTabsAlt, usuario, DatosCargados, } = this.props;
+    console.log(DatosCargados)
     let { cargandoSesion } = this.props;
 
     return (
@@ -66,7 +67,7 @@ class App extends Component {
   }
 }
 
-const mapStateToProp = ({ThemeOptions, Autenticacion}) => ({
+const mapStateToProp = ({ThemeOptions, Autenticacion, Sistema}) => ({
   colorScheme: ThemeOptions.colorScheme,
   enableFixedHeader: ThemeOptions.enableFixedHeader,
   enableMobileMenu: ThemeOptions.enableMobileMenu,
@@ -77,6 +78,7 @@ const mapStateToProp = ({ThemeOptions, Autenticacion}) => ({
 
   usuario: obtenerUsuarioAutenticado(Autenticacion), 
   cargandoSesion: estaCargandoSesion(Autenticacion),
+  DatosCargados: estanCargadoDatosSistema(Sistema),
 });
 
 const mapDispatchToProps = dispatch => ({

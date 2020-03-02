@@ -1,14 +1,17 @@
 import { URL } from '../config/conexionServer';
 import Autenticacion from '../Autenticacion';
+import { buscarDatosSistema } from './Sistema';
 const Api = {};
-
 
 const variableDuplicada = error => {
     let variableDuplicada = error.split('key:')[1];
     return `Error ya existe un usuario con el parametro ${variableDuplicada}`;
 }
 
-Api.iniciarSesion = async (correo, contraseña) => {
+//Para los datos utilizados en selects del aplicativo
+Api.buscarDatosSistema = async () => buscarDatosSistema;
+
+Api.iniciarSesion = async (Correo, Contraseña) => {
 
     let respuesta = {
         mensaje: "",
@@ -19,7 +22,7 @@ Api.iniciarSesion = async (correo, contraseña) => {
     try {
         const resultado = await fetch(URL + '/login', {
             method: 'POST',
-            body: JSON.stringify({ correo, contraseña }),
+            body: JSON.stringify({ Correo, Contraseña }),
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
                 'Accept': 'application/json'

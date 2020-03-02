@@ -179,7 +179,6 @@
     max-width: 50%;
 }
 
-
 #PerfilEmpresa{
     #modal-registro-empresa{
         max-width: 100%;
@@ -188,5 +187,81 @@
         box-shadow: none;
         margin-top: 0;
     }
+}
+
+
+#FormLogin{
+
+    margin: 0;
+    min-height: 100vh;
+    background-image: url('../assets/Sysnet/fondo_login_2.jpg')!important;
+    // background-image: url('../assets/Sysnet/FondoLogin.jpg')!important;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: sans-serif;
+
+    input{
+        border-left: none;
+        padding-left: 0;
+        border-color: #538dd4;
+        border-radius: 0.25rem;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .input-group-text{
+        background-color: white;
+        border-color: #538dd4;
+        i{
+           background-image: linear-gradient(to right, #538dd4 0%, #538dd4 100%) !important;
+           font-weight: bold;
+        }
+    }
+
+    .modal-body{
+        margin-left: 55px;
+        margin-right: 55px;
+        margin-bottom: 50px;
+    }
+
+    .ladda-button{
+        background-color: #4281d0 !important;
+        border-color: #4281d0;
+    }  
+
+    .ladda-button:hover{
+        background-color: #4281d0 !important;
+    }   
+    
+    .txt-btn-login{
+        font-size: 1.3em !important;
+        vertical-align: middle;
+        margin-right: 15px;
+    }
+
+    .icon-login{
+        font-size: 1.5em;
+        vertical-align: middle;
+    }
+
+    .Copyright{
+        color: black !important;
+        padding-top: 80px;
+    }
+}
+
+#FormLogin::before{
+    content: "";
+    width: 100%;
+    min-height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    background: #565656;
+    opacity: 0.5;
+
 }
 

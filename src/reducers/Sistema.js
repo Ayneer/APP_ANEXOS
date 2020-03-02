@@ -1,4 +1,4 @@
-import { ACCIONAR_MENU_FLOTANTE } from '../config/variables';
+import { CARGAR_TIPO_ROLES, CARGAR_TIPO_IDENTIFICACIONES, CARGAR_CIUDADES, CARGAR_DEPARTAMENTOS, CARGAR_DATOS_SISTEMA, CARGANDO_DATOS_SISTEMA } from '../config/variables';
 
 const initState = {
     TipoRoles: [],
@@ -6,16 +6,50 @@ const initState = {
     Ciudades: [],
     Departamentos: [],
     CargandoDatos: false,
+    DatosCargados: false,
 }
 
 export const Sistema = (state = initState, action) => {
     switch (action.type) {
 
-        case ACCIONAR_MENU_FLOTANTE:
+        case CARGAR_TIPO_ROLES:
             return {
                 ...state,
-                accionarMenu: action.estado,
-                usuario: action.usuario
+                TipoRoles: action.TipoRoles,
+            }
+
+        case CARGAR_TIPO_IDENTIFICACIONES:
+            return {
+                ...state,
+                TipoIdentificaciones: action.TipoIdentificaciones,
+            }
+
+        case CARGAR_CIUDADES:
+            return {
+                ...state,
+                Ciudades: action.Ciudades,
+            }
+
+        case CARGAR_DEPARTAMENTOS:
+            return {
+                ...state,
+                Departamentos: action.Departamentos,
+            }
+
+        case CARGAR_DATOS_SISTEMA:
+            return {
+                ...state,
+                TipoRoles: action.TipoRoles,
+                TipoIdentificaciones: action.TipoIdentificaciones,
+                Ciudades: action.Ciudades,
+                Departamentos: action.Departamentos,
+                DatosCargados: true,
+            }
+
+        case CARGANDO_DATOS_SISTEMA:
+            return {
+                ...state,
+                CargandoDatos: action.estado,
             }
 
         default:
@@ -23,4 +57,9 @@ export const Sistema = (state = initState, action) => {
     }
 }
 
-export const estadoMenu = state => state.accionarMenu;
+export const obtTipoRoles = state => state.TipoRoles;
+export const obtTipoIdentificaciones = state => state.TipoIdentificaciones;
+export const obtCiudades = state => state.Ciudades;
+export const obtDepartamentos = state => state.Departamentos;
+export const estanCargandoDatosSistema = state => state.CargandoDatos;
+export const estanCargadoDatosSistema = state => state.DatosCargados;

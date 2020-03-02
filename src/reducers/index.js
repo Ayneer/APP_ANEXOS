@@ -5,6 +5,7 @@ import {RegistroUsuario} from './RegistroUsuario';
 import {MenuFlotante} from './MenuFlotante';
 import {EditarUsuario} from './EditarUsuario';
 import {RegistroEmpresaPrincipal} from './RegistroEmpresaPrincipal';
+import {Sistema} from './Sistema';
 
 export default {
     ThemeOptions,
@@ -14,4 +15,5 @@ export default {
     MenuFlotante,
     EditarUsuario,
     RegistroEmpresaPrincipal,
+    Sistema,
 };

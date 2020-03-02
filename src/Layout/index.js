@@ -4,7 +4,7 @@ import Loader from 'react-loaders';
 import {ToastContainer} from 'react-toastify';
 
 const Dashboards = lazy(() => import('../Components/Dashboards'));
-const Login = lazy(() => import('../Components/LoginBoxed'));
+const Login = lazy(() => import('../Components/Login'));
 
 const redireccionar = (component) => {
     window.history.replaceState(null, null, "/");
